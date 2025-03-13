@@ -1,4 +1,4 @@
-import { Calendar, Book, Inbox, Settings } from "lucide-react";
+import { Calendar, Book, Inbox, Settings, BookAIcon } from "lucide-react";
 
 import {
   Sidebar,
@@ -16,12 +16,17 @@ import React from "react";
 const items = [
   {
     title: "All Courses",
-    url: "#",
+    url: "/all-courses",
     icon: Book,
   },
   {
+    title: "My Courses",
+    url: "/my-courses",
+    icon: Inbox,
+  },
+  {
     title: "My Learnings",
-    url: "#",
+    url: "/my-courses",
     icon: Inbox,
   },
   {
@@ -34,9 +39,14 @@ const items = [
     url: "/manage-account",
     icon: Settings,
   },
+  {
+    title: "Create Course",
+    url: "/create-course",
+    icon: BookAIcon,
+  },
 ];
 
-export function AppSidebar({ userId }: { userId: string }) {
+export function AppSidebar({ userId }: { userId: string | null }) {
   return (
     <Sidebar className="dark">
       <SidebarContent>

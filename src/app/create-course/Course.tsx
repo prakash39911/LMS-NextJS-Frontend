@@ -1,0 +1,445 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import VideoUploadButton from "@/components/VideoUploadButton";
+import { toast } from "sonner";
+import {
+  FormProviderCreateCourse,
+  useFormContextCreateCourse,
+} from "@/hooks/useReactHookForm";
+import { useFormStore } from "@/store/CreateCourseStore";
+import { useAuth } from "@clerk/nextjs";
+import { X, Image } from "lucide-react";
+import { CldImage, CloudinaryUploadWidgetResults } from "next-cloudinary";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
+import { useFieldArray } from "react-hook-form";
+
+export default function Course() {
+  return (
+    <FormProviderCreateCourse>
+      <CreateCourseForm />
+    </FormProviderCreateCourse>
+  );
+}
+
+function CreateCourseForm() {
+  const router = useRouter();
+  const { getToken } = useAuth();
+
+  const {
+    videos,
+    image,
+    addVideo: addVideoToStore,
+    addImage: addImageToStore,
+    removeVideo: removeVideoFromState,
+    reset,
+  } = useFormStore();
+
+  const {
+    handleSubmit,
+    register,
+    // watch,
+    setValue,
+    formState: { errors },
+  } = useFormContextCreateCourse();
+
+  useEffect(() => {
+    reset();
+  }, [reset]);
+
+  const onActualImageUpload = (result: CloudinaryUploadWidgetResults) => {
+    if (result.info && typeof result.info === "object") {
+      addImageToStore({
+        publicId: result.info.public_id,
+        url: result.info.secure_url,
+        fileName: result.info.original_filename,
+      });
+      setValue("main_image", result.info.public_id);
+    }
+  };
+
+  // const formData = watch();
+  // console.log("FormData", formData);
+  // console.log("Error", errors);
+
+  const actualSubmit = async (data: any) => {
+    try {
+      const token = await getToken();
+
+      const result = await fetch("http://localhost:8000/api/course/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
+      const finalResult = await result.json();
+      console.log(finalResult);
+
+      reset();
+      router.push("/all-courses");
+      toast("Course Saved Successfully");
+    } catch (error) {
+      console.error(error);
+      toast("Error While saving Course");
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-2 items-center">
+      <div className="text-5xl font-bold text-gray-300 mb-2">Create Course</div>
+      <form
+        onSubmit={handleSubmit(actualSubmit)}
+        className="flex flex-col gap-2 items-center"
+      >
+        <div className="flex flex-row justify-between w-[1200px] mb-1.5">
+          <div className="flex flex-col gap-3">
+            <div className="flex gap-3 items-center">
+              <input
+                type="text"
+                placeholder="Course title"
+                {...register("title")}
+                className="py-1.5 w-[350px] bg-slate-700 border border-gray-400 rounded-lg px-1 text-gray-200"
+              />
+              {errors.title && (
+                <div className="text-red-800">{errors.title.message}</div>
+              )}
+            </div>
+            <div className="flex gap-3 items-center">
+              <input
+                type="number"
+                placeholder="Price"
+                {...register("price", { valueAsNumber: true })}
+                className="py-1.5 w-[350px] bg-slate-700 border border-gray-400 rounded-lg px-1 text-gray-200"
+              />
+
+              {errors.price && (
+                <div className="text-red-800">Please enter valid number</div>
+              )}
+            </div>
+            <div className="flex flex-row justify-between gap-5">
+              <div className="flex items-center gap-1.5">
+                <label className="text-gray-400">Image :</label>
+                <VideoUploadButton
+                  onAssetUpload={(result) => onActualImageUpload(result)}
+                />
+              </div>
+              <div>
+                {image.publicId && (
+                  <div className="flex flex-row gap-4 items-center">
+                    <span className="text-gray-400">
+                      <Image size={20} />
+                    </span>
+                    <CldImage
+                      src={image.publicId}
+                      alt="Image"
+                      width={55}
+                      height={55}
+                    />
+                    <div className="text-blue-500 font-semibold">
+                      Upload Success!!
+                    </div>
+                    <div className="text-gray-300 flex overflow-x-hidden">
+                      <span>File:</span>
+                      <span>{image.fileName}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-0.5">
+            <textarea
+              placeholder="Description"
+              {...register("description")}
+              className="py-1.5 w-[350px] bg-slate-700 border border-gray-400 rounded-lg px-1 text-gray-200"
+            />
+            {errors.description && (
+              <div className="text-red-800">{errors.description.message}</div>
+            )}
+          </div>
+        </div>
+
+        <ManageSection
+          videos={videos}
+          addVideoToStore={addVideoToStore}
+          removeVideoFromState={removeVideoFromState}
+        />
+
+        <div className="flex flex-row gap-5 justify-center">
+          <Button
+            type="submit"
+            className="font-semibold text-gray-300 bg-red-900"
+          >
+            Save this Course
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+const ManageSection = ({
+  videos,
+  addVideoToStore,
+  removeVideoFromState,
+}: {
+  videos: videoDetails[];
+  addVideoToStore: any;
+  removeVideoFromState: any;
+}) => {
+  const {
+    register,
+    formState: { errors },
+    control,
+  } = useFormContextCreateCourse();
+
+  const {
+    fields: sectionFields,
+    append: appendSection,
+    remove,
+  } = useFieldArray({
+    name: "section",
+    control,
+  });
+
+  const addSection = () => {
+    appendSection({
+      sectionName: "New Section",
+      videoSection: [
+        {
+          video_title: "",
+          video_url: "",
+          video_public_id: "",
+          video_thumbnailUrl: "",
+          video_duration: 0,
+        },
+      ],
+    });
+  };
+  return (
+    <div className="flex flex-col gap-3">
+      {sectionFields.map((section, sectionIndex) => {
+        return (
+          <div
+            className="p-2 w-[1200px] bg-gray-700 rounded-lg border border-gray-600 flex flex-col gap-2 pl-4"
+            key={section.id}
+          >
+            <div className="text-gray-400 flex justify-between border-b border-b-gray-800">
+              <div className="flex flex-row gap-1 items-center mb-1.5">
+                <div className="font-extrabold text-2xl">
+                  Section {sectionIndex + 1}:
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <input
+                    type="text"
+                    placeholder="Section name"
+                    {...register(`section.${sectionIndex}.sectionName`)}
+                    className="py-1 w-[350px] bg-slate-700 border border-gray-400 rounded-lg px-1 text-gray-200"
+                  />
+                  {errors.section?.[sectionIndex]?.sectionName && (
+                    <div className="text-red-800">
+                      {errors.section[sectionIndex]?.sectionName?.message}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {sectionIndex > 0 && (
+                <div
+                  className="cursor-pointer"
+                  onClick={() => remove(sectionIndex)}
+                >
+                  <X />
+                </div>
+              )}
+            </div>
+            <ManageVideoSection
+              sectionIndex={sectionIndex}
+              videos={videos}
+              addVideoToStore={addVideoToStore}
+              removeVideoFromState={removeVideoFromState}
+            />
+          </div>
+        );
+      })}
+      <div className="flex justify-center">
+        <Button
+          type="button"
+          onClick={addSection}
+          className="font-semibold text-gray-300 bg-blue-900"
+        >
+          Add More Section
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const ManageVideoSection = ({
+  sectionIndex,
+  videos,
+  addVideoToStore,
+}: {
+  sectionIndex: number;
+  videos: videoDetails[];
+  removeVideoFromState: any;
+  addVideoToStore: any;
+}) => {
+  const {
+    register,
+    formState: { errors },
+    control,
+    setValue,
+  } = useFormContextCreateCourse();
+
+  const { fields, append, remove } = useFieldArray({
+    name: `section.${sectionIndex}.videoSection`,
+    control,
+  });
+
+  // const removeVideo = async (video_public_id: string) => {
+  //   console.log("remove video public ID", video_public_id);
+
+  //   await fetch("http://localhost:8000/api/deleteFromCloudinary/", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ video_public_id }),
+  //   });
+  //   removeVideoFromState(video_public_id);
+  // };
+
+  const onActualVideoUpload = async (
+    result: CloudinaryUploadWidgetResults,
+    sectionIndex: number,
+    videoIndex: number
+  ) => {
+    if (result.info && typeof result.info === "object") {
+      addVideoToStore({
+        url: result.info.secure_url,
+        public_id: result.info.public_id,
+        thumbnailUrl: result.info.thumbnail_url,
+        fileName: result.info.original_filename,
+        sectionIndex: sectionIndex,
+        videoIndex: videoIndex,
+        duration: result.info.duration || 0,
+      });
+      setValue(
+        `section.${sectionIndex}.videoSection.${videoIndex}.video_url`,
+        result.info.secure_url
+      );
+      setValue(
+        `section.${sectionIndex}.videoSection.${videoIndex}.video_public_id`,
+        result.info.public_id
+      );
+      setValue(
+        `section.${sectionIndex}.videoSection.${videoIndex}.video_thumbnailUrl`,
+        result.info.thumbnail_url
+      );
+
+      setValue(
+        `section.${sectionIndex}.videoSection.${videoIndex}.video_duration`,
+        (result.info.duration as number) || 0
+      );
+    }
+
+    console.log(result);
+  };
+  return (
+    <div>
+      {fields.map((video, videoIndex) => {
+        return (
+          <div
+            key={video.id}
+            className="p-2 w-[1100px] h-[115px] bg-gray-800 rounded-lg border border-gray-600 flex flex-col gap-2 pl-4"
+          >
+            <div className="text-gray-400 flex justify-between border-b border-b-gray-600">
+              <div className="flex flex-row gap-1 items-center mb-1.5">
+                <div className="text-xl font-bold">Video {videoIndex + 1}:</div>
+                <div className="flex items-center gap-1.5">
+                  <input
+                    type="text"
+                    placeholder="Video title"
+                    {...register(
+                      `section.${sectionIndex}.videoSection.${videoIndex}.video_title`
+                    )}
+                    className="py-1 w-[350px] bg-slate-700 border border-gray-400 rounded-lg px-1 text-gray-200"
+                  />
+                  {errors.section?.[sectionIndex]?.videoSection?.[videoIndex]
+                    ?.video_title && (
+                    <div className="text-red-800">
+                      {
+                        errors.section?.[sectionIndex]?.videoSection?.[
+                          videoIndex
+                        ]?.video_title.message
+                      }
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {videoIndex > 0 && (
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    remove(videoIndex);
+                  }}
+                >
+                  <X />
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-row justify-between items-center">
+              <div className="flex items-center gap-1.5">
+                <label className="text-gray-400">Video File :</label>
+                <VideoUploadButton
+                  onAssetUpload={(result) =>
+                    onActualVideoUpload(result, sectionIndex, videoIndex)
+                  }
+                />
+              </div>
+
+              {videos.map(
+                (videoDetailsObject) =>
+                  videoDetailsObject.sectionIndex === sectionIndex &&
+                  videoDetailsObject.videoIndex === videoIndex && (
+                    <div key={videoDetailsObject.public_id}>
+                      <div className=" gap-3 flex items-center">
+                        <div className="text-blue-400 text-xl font-bold">
+                          Upload Successfull:
+                        </div>
+                        <div className="text-gray-300">
+                          {" "}
+                          {videoDetailsObject.fileName}
+                        </div>
+                      </div>
+                    </div>
+                  )
+              )}
+            </div>
+          </div>
+        );
+      })}
+      <div className="flex justify-center">
+        <Button
+          type="button"
+          className="font-semibold text-gray-300"
+          onClick={() =>
+            append({
+              video_title: "",
+              video_public_id: "",
+              video_thumbnailUrl: "",
+              video_url: "",
+            })
+          }
+        >
+          Add More Videos
+        </Button>
+      </div>
+    </div>
+  );
+};
