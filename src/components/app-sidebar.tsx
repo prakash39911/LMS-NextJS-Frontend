@@ -1,3 +1,5 @@
+"use client";
+
 import { Calendar, Book, Inbox, Settings, BookAIcon } from "lucide-react";
 
 import {
@@ -26,7 +28,7 @@ const items = [
   },
   {
     title: "My Learnings",
-    url: "/my-courses",
+    url: "/my-learnings",
     icon: Inbox,
   },
   {
@@ -46,7 +48,15 @@ const items = [
   },
 ];
 
-export function AppSidebar({ userId }: { userId: string | null }) {
+export function AppSidebar({
+  userId,
+  currentUserData,
+}: {
+  userId: string | null;
+  currentUserData: any;
+}) {
+  const isTeacher = currentUserData?.role === "teacher" ? true : false;
+
   return (
     <Sidebar className="dark">
       <SidebarContent>
@@ -58,6 +68,14 @@ export function AppSidebar({ userId }: { userId: string | null }) {
             <SidebarMenu className="mt-4">
               {items.map((item) => {
                 if (item.title === "Profile" && !userId) return;
+                if (item.title === "My Learnings" && isTeacher) return;
+                if (
+                  (item.title === "My Courses" ||
+                    item.title === "Create Course") &&
+                  !isTeacher
+                )
+                  return;
+
                 return (
                   <div key={item.title}>
                     <SidebarMenuItem>

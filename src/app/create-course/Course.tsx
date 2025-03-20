@@ -14,6 +14,7 @@ import { CldImage, CloudinaryUploadWidgetResults } from "next-cloudinary";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import { useFieldArray } from "react-hook-form";
+import ImageUploadButton from "@/components/ImageUploadButton";
 
 export default function Course() {
   return (
@@ -122,7 +123,8 @@ function CreateCourseForm() {
             <div className="flex flex-row justify-between gap-5">
               <div className="flex items-center gap-1.5">
                 <label className="text-gray-400">Image :</label>
-                <VideoUploadButton
+                <ImageUploadButton
+                  btnName="Upload Image"
                   onAssetUpload={(result) => onActualImageUpload(result)}
                 />
               </div>
@@ -317,9 +319,11 @@ const ManageVideoSection = ({
     sectionIndex: number,
     videoIndex: number
   ) => {
+    console.log("Cloudinary video upload result", result);
+
     if (result.info && typeof result.info === "object") {
       addVideoToStore({
-        url: result.info.secure_url,
+        url: result.info.playback_url,
         public_id: result.info.public_id,
         thumbnailUrl: result.info.thumbnail_url,
         fileName: result.info.original_filename,
@@ -329,7 +333,7 @@ const ManageVideoSection = ({
       });
       setValue(
         `section.${sectionIndex}.videoSection.${videoIndex}.video_url`,
-        result.info.secure_url
+        result.info.playback_url as string
       );
       setValue(
         `section.${sectionIndex}.videoSection.${videoIndex}.video_public_id`,
@@ -397,6 +401,7 @@ const ManageVideoSection = ({
               <div className="flex items-center gap-1.5">
                 <label className="text-gray-400">Video File :</label>
                 <VideoUploadButton
+                  btnName="Upload Video"
                   onAssetUpload={(result) =>
                     onActualVideoUpload(result, sectionIndex, videoIndex)
                   }
@@ -434,6 +439,7 @@ const ManageVideoSection = ({
               video_public_id: "",
               video_thumbnailUrl: "",
               video_url: "",
+              video_duration: 0,
             })
           }
         >

@@ -1,9 +1,8 @@
 import React from "react";
-import Navbar from "./navbar/Navbar";
-import SideBarLayoutComponent from "./SideBarLayoutComponent";
+import Navbar from "../components/navbar/Navbar";
+import SideBarLayoutComponent from "../components/SideBarLayoutComponent";
 import { Toaster } from "@/components/ui/sonner";
-
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 export default async function Provider({
   children,
@@ -11,10 +10,15 @@ export default async function Provider({
   children: React.ReactNode;
 }) {
   const { userId } = await auth();
+  const currentUserData = await currentUser();
+
   return (
     <div className="grid grid-cols-[auto_1fr] bg-gray-800">
       <div>
-        <SideBarLayoutComponent userId={userId} />
+        <SideBarLayoutComponent
+          userId={userId}
+          currentUserData={currentUserData?.publicMetadata}
+        />
       </div>
       <div className="bg-gray-800">
         <Navbar />

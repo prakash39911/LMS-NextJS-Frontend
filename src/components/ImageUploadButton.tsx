@@ -11,14 +11,10 @@ type Props = {
   btnName: string;
 };
 
-export default function VideoUploadButton({ onAssetUpload, btnName }: Props) {
+export default function ImageUploadButton({ onAssetUpload, btnName }: Props) {
   return (
     <CldUploadButton
-      options={{
-        maxFiles: 1,
-        folder: "LMS",
-        resourceType: "video",
-      }}
+      options={{ maxFiles: 1, folder: "LMS" }}
       onSuccess={onAssetUpload}
       signatureEndpoint="http://localhost:8000/api/sign-video"
       uploadPreset="ml_default"

@@ -74,3 +74,19 @@ export function calSectionsDurationsEtc(section: section) {
 
   return { noOfSections, noOfVideoSections, totalDurationInMinutesOrHours };
 }
+
+export function secondsToMinuteForEachVideo(totalSeconds: number) {
+  const roundOffSeconds = Math.floor(totalSeconds);
+  const minutes = Math.floor(roundOffSeconds / 60);
+  const seconds = roundOffSeconds % 60;
+  return `${minutes}:${seconds.toString().padStart(2, "0")} minute`;
+}
+
+export function DatabaseDateToGeneralDate(date: Date) {
+  const convertedDate = new Date(date);
+  const year = convertedDate.getFullYear();
+  const month = String(convertedDate.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+  const day = String(convertedDate.getDate()).padStart(2, "0");
+
+  return `${day}/${month}/${year}`;
+}

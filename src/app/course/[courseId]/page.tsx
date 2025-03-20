@@ -1,4 +1,5 @@
 import CoursePageComponent from "@/components/CoursePageComponent";
+import { auth } from "@clerk/nextjs/server";
 import React from "react";
 
 export default async function page({
@@ -6,16 +7,17 @@ export default async function page({
 }: {
   params: Promise<{ courseId: string }>;
 }) {
+  const { sessionClaims } = await auth();
+  const isTeacher = sessionClaims?.metadata.role === "teacher";
+
   try {
     const { courseId } = await params;
-
     const response = await fetch(
       `http://localhost:8000/api/course/detail/${courseId}`,
       {
         method: "GET",
       }
     );
-
     if (!response.ok) {
       throw new Error("Failed to fetch data");
     }
@@ -24,12 +26,10 @@ export default async function page({
 
     return (
       <div>
-        <CoursePageComponent course={course} />
+        <CoursePageComponent course={course} isTeacher={isTeacher} />
       </div>
     );
   } catch (error) {
     console.error(error);
   }
-  const { courseId } = await params;
-  return <div>Course-Id- {courseId}</div>;
 }

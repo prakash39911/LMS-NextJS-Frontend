@@ -1,34 +1,135 @@
 "use client";
 
 import React from "react";
+import { Clock, Award, Users, Globe, BookOpen, Video } from "lucide-react";
 import {
-  Clock,
-  PlayCircle,
-  Award,
-  Users,
-  Globe,
-  ChevronDown,
-  BookOpen,
-} from "lucide-react";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { StarRating } from "./StarComponent";
 import {
   CalNoOfEntrolledStudents,
   CalRating,
   calSectionsDurationsEtc,
+  DatabaseDateToGeneralDate,
+  secondsToMinuteForEachVideo,
 } from "@/lib/utilityFunctions";
 import { CldImage } from "next-cloudinary";
+import { useAuth } from "@clerk/nextjs";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-function CoursePageComponent({ course }: { course: courseDetailPageType }) {
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    if ((window as any).Razorpay) {
+      resolve(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
+export default function CoursePageComponent({
+  course,
+  isTeacher,
+}: {
+  course: courseDetailPageType;
+  isTeacher: boolean;
+}) {
+  const router = useRouter();
+  const { getToken } = useAuth();
   const { ratings, noOfRating } = CalRating(course.rating);
   const enrolledStudents = CalNoOfEntrolledStudents(course.enrolledStudents);
   const { noOfSections, noOfVideoSections, totalDurationInMinutesOrHours } =
     calSectionsDurationsEtc(course.section);
 
+  const handleClick = async (data: { amount: string }) => {
+    try {
+      const token = await getToken();
+
+      const isRazorpayLoaded = await loadRazorpayScript();
+
+      if (!isRazorpayLoaded) {
+        console.log("Razorpay SDK failed to load.");
+        return;
+      }
+
+      const response = await fetch(
+        "http://localhost:8000/api/payment/createOrder",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // Authorization: `Basic ${process.env.RZPAY_KEY_ID}:${process.env.RZPAY_SECRET_KEY}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      const finalResponse = await response.json();
+
+      if (!finalResponse.success) {
+        console.error("Order was not created:", finalResponse);
+        return;
+      }
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RZPAY_KEY_ID,
+        amount: data.amount,
+        currency: "INR",
+        name: "LMS Website",
+        description: "Payment for Order",
+        order_id: finalResponse?.data?.id,
+        prefill: {
+          name: "John Doe",
+          email: "john@example.com",
+        },
+        handler: async function (response: any) {
+          const result = await fetch(
+            "http://localhost:8000/api/payment/verify-payment",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                razorpay_order_id: finalResponse?.data?.id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                courseId: course.id,
+              }),
+            }
+          );
+
+          const finalResult = await result.json();
+
+          if (finalResult.status) {
+            toast("Payment Was Successfull");
+            router.push(`/learn/${course.id}`);
+          } else {
+            alert("Payment verification failed");
+          }
+        },
+      };
+
+      const razor = new (window as any).Razorpay(options);
+      razor.open();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="vertical-center bg-gray-900 text-white">
       {/* Hero Section */}
-      <div className="bg-gray-800 py-12">
-        <div className="container mx-auto px-4 max-w-8xl">
+      <div className="bg-gray-800 py-5">
+        <div className="container mx-auto px-4 max-w-7xl">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
               <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
@@ -53,7 +154,9 @@ function CoursePageComponent({ course }: { course: courseDetailPageType }) {
                 </div>
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
-                  <span>Last updated 2/2024</span>
+                  <span>
+                    Last updated {DatabaseDateToGeneralDate(course.updatedAt)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -69,15 +172,28 @@ function CoursePageComponent({ course }: { course: courseDetailPageType }) {
                   className="w-full aspect-video object-cover"
                 />
                 <div className="p-6">
-                  <div className="mb-6">
-                    <span className="text-3xl font-bold">Rs.149</span>
+                  <div className="mb-6 gap-2 flex items-center">
                     <span className="line-through text-gray-400 ml-2">
                       Rs.{course.price}
                     </span>
+                    <span className="text-2xl font-bold">
+                      Rs.{Math.ceil(course.price * 0.9)}
+                    </span>
                   </div>
-                  <button className="w-full bg-blue-700 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg mb-4 transition">
-                    Buy Now
-                  </button>
+                  {!isTeacher && (
+                    <button
+                      className="w-full bg-blue-700 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg mb-4 transition"
+                      onClick={() =>
+                        handleClick({
+                          amount:
+                            Math.ceil(course.price * 0.9).toString() + "00",
+                        })
+                      }
+                    >
+                      Buy Now
+                    </button>
+                  )}
+
                   <div className="space-y-4 text-sm">
                     <div className="flex items-center gap-2">
                       <Clock className="w-5 h-5" />
@@ -120,8 +236,41 @@ function CoursePageComponent({ course }: { course: courseDetailPageType }) {
           </div>
 
           {/* Sample Section */}
-          <div className="border-b border-gray-700">
-            <button className="w-full p-4 flex items-center justify-between hover:bg-gray-700 transition">
+          <div className="border-b border-gray-700 mx-3">
+            <Accordion type="single" collapsible className="w-full">
+              {course.section.map((eachSection) => (
+                <AccordionItem key={eachSection.id} value={eachSection.id}>
+                  <AccordionTrigger className="text-xl font-extrabold">
+                    {eachSection.sectionName}
+                  </AccordionTrigger>
+                  <div>
+                    {eachSection.videoSection.map((eachVideoSection) => (
+                      <AccordionContent
+                        key={eachVideoSection.id}
+                        className="border-b mt-0.5"
+                      >
+                        <div className="flex justify-between">
+                          <div className="flex gap-2 items-center cursor-pointer hover:font-semibold">
+                            <span>
+                              <Video size={18} />
+                            </span>
+                            <span className="font-serif text-xl">
+                              {eachVideoSection.video_title}
+                            </span>
+                          </div>
+                          <div>
+                            {secondsToMinuteForEachVideo(
+                              eachVideoSection.video_duration
+                            )}
+                          </div>
+                        </div>
+                      </AccordionContent>
+                    ))}
+                  </div>
+                </AccordionItem>
+              ))}
+            </Accordion>
+            {/* <button className="w-full p-4 flex items-center justify-between hover:bg-gray-700 transition">
               <div className="flex items-center gap-4">
                 <ChevronDown className="w-5 h-5" />
                 <div className="text-left">
@@ -130,14 +279,10 @@ function CoursePageComponent({ course }: { course: courseDetailPageType }) {
                 </div>
               </div>
               <PlayCircle className="w-5 h-5 text-gray-400" />
-            </button>
+            </button> */}
           </div>
-
-          {/* More sections would follow... */}
         </div>
       </div>
     </div>
   );
 }
-
-export default CoursePageComponent;

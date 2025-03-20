@@ -40,6 +40,7 @@ type courseDetailPageType = {
   main_image: string;
   enrolledStudents: { id: string; courseId: string; studentId: string }[];
   rating: { id: string; value: number; userId: string }[];
+  updatedAt: Date;
   section: {
     id: string;
     sectionName: string;

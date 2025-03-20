@@ -2,15 +2,15 @@ import CourseCard from "@/components/CourseCard";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
-export default async function MyCourses() {
+export default async function MyLearnings() {
   const { sessionClaims, getToken } = await auth();
   const token = await getToken();
 
-  if (sessionClaims?.metadata.role === "student") redirect("/");
+  if (sessionClaims?.metadata.role === "teacher") redirect("/");
 
   try {
     const response = await fetch(
-      "http://localhost:8000/api/course/getCourseForteacher",
+      "http://localhost:8000/api/course/getCourseForStudent",
       {
         method: "GET",
         headers: {
@@ -19,11 +19,15 @@ export default async function MyCourses() {
       }
     );
 
-    if (!response.ok) {
-      throw new Error("Error while fetching data");
-    }
-
     const finalData = await response.json();
+
+    if (!finalData.status) {
+      return (
+        <div className="flex vertical-center justify-center items-center text-gray-400 text-4xl">
+          {finalData.message}
+        </div>
+      );
+    }
     const courses = finalData.data;
 
     return (
