@@ -8,7 +8,7 @@ import {
   useFormContextCreateCourse,
 } from "@/hooks/useReactHookForm";
 import { useFormStore } from "@/store/CreateCourseStore";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { X, Image } from "lucide-react";
 import { CldImage, CloudinaryUploadWidgetResults } from "next-cloudinary";
 import { useRouter } from "next/navigation";
@@ -16,17 +16,20 @@ import React, { useEffect } from "react";
 import { useFieldArray } from "react-hook-form";
 import ImageUploadButton from "@/components/ImageUploadButton";
 
-export default function Course() {
+export default function Course({ name }: { name: string }) {
   return (
     <FormProviderCreateCourse>
-      <CreateCourseForm />
+      <CreateCourseForm name={name} />
     </FormProviderCreateCourse>
   );
 }
 
-function CreateCourseForm() {
+function CreateCourseForm({ name }: { name: string }) {
+  const { user } = useUser();
   const router = useRouter();
   const { getToken } = useAuth();
+
+  const fullName = user?.fullName || name;
 
   const {
     videos,
@@ -66,6 +69,7 @@ function CreateCourseForm() {
 
   const actualSubmit = async (data: any) => {
     try {
+      const finalObjToBeSubmitted = { ...data, ownerName: fullName };
       const token = await getToken();
 
       const result = await fetch("http://localhost:8000/api/course/create", {
@@ -74,7 +78,7 @@ function CreateCourseForm() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(finalObjToBeSubmitted),
       });
       const finalResult = await result.json();
       console.log(finalResult);

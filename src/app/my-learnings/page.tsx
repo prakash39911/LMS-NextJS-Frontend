@@ -31,11 +31,14 @@ export default async function MyLearnings() {
     const courses = finalData.data;
 
     return (
-      <div className="flex flex-row gap-6 flex-wrap ml-6 mt-5">
+      <div className="flex flex-col gap-6 flex-wrap ml-6 mt-5">
+        <div className="text-3xl font-bold text-gray-300 text-center">
+          Purchased Courses
+        </div>
         {courses &&
           courses.map((eachCourse: courseType) => (
-            <div key={eachCourse.id}>
-              <CourseCard course={eachCourse} />
+            <div key={eachCourse.id} className="flex flex-row flex-wrap gap-5">
+              <CourseCard course={eachCourse} ispurchasedCourse={true} />
             </div>
           ))}
       </div>

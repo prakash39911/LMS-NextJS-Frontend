@@ -92,3 +92,41 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  @apply w-full;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 1.25rem;
+  width: 1.25rem;
+  border-radius: 50%;
+  background: var(--thumb-color);
+  cursor: pointer;
+  pointer-events: auto;
+  margin-top: -0.5rem;
+  box-shadow: var(--thumb-shadow);
+  transition: box-shadow 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.3);
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 1.25rem;
+  width: 1.25rem;
+  border: none;
+  border-radius: 50%;
+  background: var(--thumb-color);
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: var(--thumb-shadow);
+  transition: box-shadow 0.2s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  box-shadow: 0 0 0 6px rgba(59, 130, 246, 0.3);
+}

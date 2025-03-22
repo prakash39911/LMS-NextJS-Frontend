@@ -14,7 +14,12 @@ export default function ButtonComponent({
   const router = useRouter();
   return (
     <div>
-      <Button onClick={() => router.push(`${link}`)}>{btnName}</Button>
+      <Button
+        className="border border-gray-400 bg-gray-600 hover:bg-gray-900"
+        onClick={() => router.push(`${link}`)}
+      >
+        {btnName}
+      </Button>
     </div>
   );
 }

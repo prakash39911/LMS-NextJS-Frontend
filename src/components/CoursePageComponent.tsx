@@ -1,7 +1,15 @@
 "use client";
 
 import React from "react";
-import { Clock, Award, Users, Globe, BookOpen, Video } from "lucide-react";
+import {
+  Clock,
+  Award,
+  Users,
+  Globe,
+  BookOpen,
+  Video,
+  ArrowRight,
+} from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -20,6 +28,8 @@ import { CldImage } from "next-cloudinary";
 import { useAuth } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import RatingDialog from "./RatingDialog";
+import { Button } from "./ui/button";
 
 const loadRazorpayScript = () => {
   return new Promise((resolve) => {
@@ -38,9 +48,15 @@ const loadRazorpayScript = () => {
 export default function CoursePageComponent({
   course,
   isTeacher,
+  userId,
+  isPurchased,
+  isTeacherOwner,
 }: {
   course: courseDetailPageType;
   isTeacher: boolean;
+  userId: string | null;
+  isPurchased: boolean;
+  isTeacherOwner: boolean;
 }) {
   const router = useRouter();
   const { getToken } = useAuth();
@@ -48,6 +64,11 @@ export default function CoursePageComponent({
   const enrolledStudents = CalNoOfEntrolledStudents(course.enrolledStudents);
   const { noOfSections, noOfVideoSections, totalDurationInMinutesOrHours } =
     calSectionsDurationsEtc(course.section);
+  const ratingArray = course.rating.filter(
+    (eachObj) => eachObj.userId === userId
+  );
+
+  const isUserHasGivenRating = ratingArray.length > 0 ? true : false;
 
   const handleClick = async (data: { amount: string }) => {
     try {
@@ -126,90 +147,121 @@ export default function CoursePageComponent({
   };
 
   return (
-    <div className="vertical-center bg-gray-900 text-white">
-      {/* Hero Section */}
-      <div className="bg-gray-800 py-5">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="md:col-span-2">
-              <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
-              <p className="text-gray-300 mb-6">{course.description}</p>
+    <div>
+      <div className="vertical-center bg-gray-900 text-white">
+        {/* Hero Section */}
+        <div className="bg-gray-800 py-5">
+          <div className="container mx-auto px-4 max-w-7xl">
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="md:col-span-2">
+                <h1 className="text-3xl font-bold mb-4">{course.title}</h1>
+                <p className="text-gray-300 mb-6">{course.description}</p>
 
-              <div className="flex items-center gap-4 mb-6">
-                <StarRating rating={ratings} />
-                <span className="text-blue-400">{noOfRating} ratings</span>
-                <span className="text-gray-400">
-                  {enrolledStudents} students
-                </span>
-              </div>
-
-              <div className="flex items-center gap-4 text-sm text-gray-300 mb-6">
-                <div className="flex items-center gap-1">
-                  <Users className="w-4 h-4" />
-                  <span>Created by John Doe</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Globe className="w-4 h-4" />
-                  <span>English</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  <span>
-                    Last updated {DatabaseDateToGeneralDate(course.updatedAt)}
+                <div className="flex items-center gap-4 mb-6">
+                  <StarRating rating={ratings} />
+                  <span className="text-blue-400">{noOfRating} ratings</span>
+                  <span className="text-gray-400">
+                    {enrolledStudents} students
                   </span>
                 </div>
-              </div>
-            </div>
 
-            {/* Course Preview Card */}
-            <div className="relative">
-              <div className="bg-gray-700 rounded-lg overflow-hidden shadow-xl sticky top-4">
-                <CldImage
-                  src={course.main_image}
-                  height={300}
-                  width={300}
-                  alt="course image"
-                  className="w-full aspect-video object-cover"
-                />
-                <div className="p-6">
-                  <div className="mb-6 gap-2 flex items-center">
-                    <span className="line-through text-gray-400 ml-2">
-                      Rs.{course.price}
-                    </span>
-                    <span className="text-2xl font-bold">
-                      Rs.{Math.ceil(course.price * 0.9)}
+                <div className="flex items-center gap-4 text-sm text-gray-300 mb-6">
+                  <div className="flex items-center gap-1">
+                    <Users className="w-4 h-4" />
+                    <span>
+                      Created by {course.ownerName && course.ownerName}
                     </span>
                   </div>
-                  {!isTeacher && (
-                    <button
-                      className="w-full bg-blue-700 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg mb-4 transition"
-                      onClick={() =>
-                        handleClick({
-                          amount:
-                            Math.ceil(course.price * 0.9).toString() + "00",
-                        })
-                      }
-                    >
-                      Buy Now
-                    </button>
-                  )}
 
-                  <div className="space-y-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-5 h-5" />
-                      <span>
-                        {totalDurationInMinutesOrHours} of video content
-                      </span>
+                  <div className="flex items-center gap-1">
+                    <Globe className="w-4 h-4" />
+                    <span>English</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    <span>
+                      Last updated {DatabaseDateToGeneralDate(course.updatedAt)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Course Preview Card */}
+              <div className="relative">
+                <div className="bg-gray-700 rounded-lg overflow-hidden shadow-xl sticky top-4">
+                  <CldImage
+                    src={course.main_image}
+                    height={300}
+                    width={300}
+                    alt="course image"
+                    className="w-full aspect-video object-cover"
+                  />
+                  <div className="p-6">
+                    <div className="mb-6 gap-2 flex items-center">
+                      {!isPurchased && (
+                        <div className="flex gap-2 items-center">
+                          <span className="line-through text-gray-400 ml-2">
+                            Rs.{course.price}
+                          </span>
+                          <span className="text-2xl font-bold">
+                            Rs.{Math.ceil(course.price * 0.9)}
+                          </span>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <BookOpen className="w-5 h-5" />
-                      <span>
-                        {noOfSections} Sections and {noOfVideoSections} Lectures
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Award className="w-5 h-5" />
-                      <span>Certificate of completion</span>
+                    {isUserHasGivenRating ? (
+                      <div className="text-gray-300 text-xl flex justify-center mb-10 border border-blue-400 py-1">
+                        Thank you for your feedback
+                      </div>
+                    ) : (
+                      <div>
+                        {!isTeacher &&
+                          (isPurchased ? (
+                            <div className="flex justify-center items-center mt-[-20px] mb-4">
+                              <RatingDialog courseId={course.id} />
+                            </div>
+                          ) : (
+                            <button
+                              className="w-full bg-blue-700 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg mb-4 transition"
+                              onClick={() => {
+                                if (userId && !isPurchased) {
+                                  handleClick({
+                                    amount:
+                                      Math.ceil(course.price * 0.9).toString() +
+                                      "00",
+                                  });
+                                }
+                                router.push("/signin");
+                              }}
+                            >
+                              {userId
+                                ? isPurchased
+                                  ? "Please give your feedback"
+                                  : "Buy Now"
+                                : "Login to Buy this Course"}
+                            </button>
+                          ))}
+                      </div>
+                    )}
+
+                    <div className="space-y-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-5 h-5" />
+                        <span>
+                          {totalDurationInMinutesOrHours} of video content
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <BookOpen className="w-5 h-5" />
+                        <span>
+                          {noOfSections} Sections and {noOfVideoSections}{" "}
+                          Lectures
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Award className="w-5 h-5" />
+                        <span>Certificate of completion</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -217,60 +269,77 @@ export default function CoursePageComponent({
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Course Content Preview */}
-      <div className="container mx-auto px-4 max-w-7xl py-8">
-        <h2 className="text-2xl font-bold mb-6">Course Content</h2>
-        <div className="bg-gray-800 rounded-lg overflow-hidden">
-          <div className="p-4 border-b border-gray-700 flex items-center justify-between">
-            <div>
-              <span className="font-medium">{noOfSections} sections</span>
-              <span className="mx-2">•</span>
-              <span className="font-medium">{noOfVideoSections} lectures</span>
-              <span className="mx-2">•</span>
-              <span className="font-medium">
-                {totalDurationInMinutesOrHours} of Content
-              </span>
-            </div>
+        {/* Course Content Preview */}
+        <div className="container mx-auto px-4 max-w-7xl py-8">
+          <div className="flex justify-between">
+            <h2 className="text-2xl font-bold mb-6">Course Content</h2>
+            {(isTeacherOwner || isPurchased) && (
+              <div>
+                <Button
+                  variant="outline"
+                  className="bg-transparent text-gray-300"
+                  onClick={() => router.push(`/learn/${course.id}`)}
+                >
+                  <span>Go To Content</span>
+                  <span>
+                    <ArrowRight />
+                  </span>
+                </Button>
+              </div>
+            )}
           </div>
+          <div className="bg-gray-800 rounded-lg overflow-hidden">
+            <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+              <div>
+                <span className="font-medium">{noOfSections} sections</span>
+                <span className="mx-2">•</span>
+                <span className="font-medium">
+                  {noOfVideoSections} lectures
+                </span>
+                <span className="mx-2">•</span>
+                <span className="font-medium">
+                  {totalDurationInMinutesOrHours} of Content
+                </span>
+              </div>
+            </div>
 
-          {/* Sample Section */}
-          <div className="border-b border-gray-700 mx-3">
-            <Accordion type="single" collapsible className="w-full">
-              {course.section.map((eachSection) => (
-                <AccordionItem key={eachSection.id} value={eachSection.id}>
-                  <AccordionTrigger className="text-xl font-extrabold">
-                    {eachSection.sectionName}
-                  </AccordionTrigger>
-                  <div>
-                    {eachSection.videoSection.map((eachVideoSection) => (
-                      <AccordionContent
-                        key={eachVideoSection.id}
-                        className="border-b mt-0.5"
-                      >
-                        <div className="flex justify-between">
-                          <div className="flex gap-2 items-center cursor-pointer hover:font-semibold">
-                            <span>
-                              <Video size={18} />
-                            </span>
-                            <span className="font-serif text-xl">
-                              {eachVideoSection.video_title}
-                            </span>
+            {/* Sample Section */}
+            <div className="border-b border-gray-700 mx-3">
+              <Accordion type="single" collapsible className="w-full">
+                {course.section.map((eachSection) => (
+                  <AccordionItem key={eachSection.id} value={eachSection.id}>
+                    <AccordionTrigger className="text-xl font-extrabold">
+                      {eachSection.sectionName}
+                    </AccordionTrigger>
+                    <div>
+                      {eachSection.videoSection.map((eachVideoSection) => (
+                        <AccordionContent
+                          key={eachVideoSection.id}
+                          className="border-b mt-0.5"
+                        >
+                          <div className="flex justify-between">
+                            <div className="flex gap-2 items-center cursor-pointer hover:font-semibold">
+                              <span>
+                                <Video size={18} />
+                              </span>
+                              <span className="font-serif text-xl">
+                                {eachVideoSection.video_title}
+                              </span>
+                            </div>
+                            <div>
+                              {secondsToMinuteForEachVideo(
+                                eachVideoSection.video_duration
+                              )}
+                            </div>
                           </div>
-                          <div>
-                            {secondsToMinuteForEachVideo(
-                              eachVideoSection.video_duration
-                            )}
-                          </div>
-                        </div>
-                      </AccordionContent>
-                    ))}
-                  </div>
-                </AccordionItem>
-              ))}
-            </Accordion>
-            {/* <button className="w-full p-4 flex items-center justify-between hover:bg-gray-700 transition">
+                        </AccordionContent>
+                      ))}
+                    </div>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+              {/* <button className="w-full p-4 flex items-center justify-between hover:bg-gray-700 transition">
               <div className="flex items-center gap-4">
                 <ChevronDown className="w-5 h-5" />
                 <div className="text-left">
@@ -280,6 +349,7 @@ export default function CoursePageComponent({
               </div>
               <PlayCircle className="w-5 h-5 text-gray-400" />
             </button> */}
+            </div>
           </div>
         </div>
       </div>

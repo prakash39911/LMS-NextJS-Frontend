@@ -38,6 +38,7 @@ type courseDetailPageType = {
   description: string;
   price: number;
   main_image: string;
+  ownerName: string;
   enrolledStudents: { id: string; courseId: string; studentId: string }[];
   rating: { id: string; value: number; userId: string }[];
   updatedAt: Date;
@@ -53,4 +54,9 @@ type courseDetailPageType = {
       video_duration: number;
     }[];
   }[];
+};
+
+type GetAllCoursesParams = {
+  ratings: string;
+  prices: string;
 };

@@ -67,12 +67,18 @@ export function AppSidebar({
           <SidebarGroupContent>
             <SidebarMenu className="mt-4">
               {items.map((item) => {
-                if (item.title === "Profile" && !userId) return;
                 if (item.title === "My Learnings" && isTeacher) return;
                 if (
                   (item.title === "My Courses" ||
                     item.title === "Create Course") &&
                   !isTeacher
+                )
+                  return;
+                if (
+                  !userId &&
+                  (item.title === "Profile" ||
+                    item.title === "Billing" ||
+                    item.title === "My Learnings")
                 )
                   return;
 

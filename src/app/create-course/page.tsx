@@ -10,9 +10,12 @@ export default async function page() {
 
   if (sessionClaims?.metadata.role === "student") redirect("/");
 
+  const name = ((sessionClaims?.metadata.firstName as string) +
+    sessionClaims?.metadata.lastName) as string;
+
   return (
     <div className="p-3 text-white">
-      <Course />
+      <Course name={name} />
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import ButtonComponent from "@/components/ButtonComponent";
 import VideoPlayerComponent from "@/components/VideoPlayerComponent";
 import { auth } from "@clerk/nextjs/server";
 import React from "react";
@@ -29,8 +30,11 @@ export default async function page({
 
     if (!data.status) {
       return (
-        <div className="text-gray-300 text-3xl flex justify-center vertical-center items-center">
-          {data.message}
+        <div className="flex flex-col gap-2 justify-center vertical-center items-center">
+          <div className="text-gray-300 text-3xl ">{data.message}</div>
+          <div>
+            <ButtonComponent btnName="Go to Your Courses" link="/my-courses" />
+          </div>
         </div>
       );
     }

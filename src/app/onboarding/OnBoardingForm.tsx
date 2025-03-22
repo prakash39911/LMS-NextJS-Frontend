@@ -27,10 +27,12 @@ export default function OnBoardingForm() {
   const { getToken } = useAuth();
   const router = useRouter();
 
+  const isFirstNameExist = user?.firstName;
+  const isLastNameExist = user?.lastName;
+
   const {
     register,
     handleSubmit,
-    reset,
     control,
     formState: { errors, isDirty },
   } = useForm<onBoardingFormSchemaType>({
@@ -58,7 +60,7 @@ export default function OnBoardingForm() {
         await user?.reload();
         router.push("/");
         toast("Data Saved Successfully");
-        reset();
+        router.refresh();
       }
     } catch (error) {
       console.log(error);
@@ -80,38 +82,43 @@ export default function OnBoardingForm() {
       <CardContent>
         <form onSubmit={handleSubmit(onActualSubmit)}>
           <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name" className="text-gray-300">
-                FirstName
-              </Label>
-              <Input
-                id="firstname"
-                placeholder="Enter firstname"
-                className="bg-gray-300"
-                {...register("firstname")}
-              />
-              {errors.firstname && (
-                <div className="text-sm text-red-600">
-                  {errors.firstname.message}
-                </div>
-              )}
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name" className="text-gray-300">
-                LastName
-              </Label>
-              <Input
-                id="lastname"
-                placeholder="Enter lastname"
-                className="bg-gray-300"
-                {...register("lastname")}
-              />
-              {errors.lastname && (
-                <div className="text-sm text-red-600">
-                  {errors.lastname.message}
-                </div>
-              )}
-            </div>
+            {!isFirstNameExist && (
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="name" className="text-gray-300">
+                  FirstName
+                </Label>
+                <Input
+                  id="firstname"
+                  placeholder="Enter firstname"
+                  className="bg-gray-300"
+                  {...register("firstname")}
+                />
+                {errors.firstname && (
+                  <div className="text-sm text-red-600">
+                    {errors.firstname.message}
+                  </div>
+                )}
+              </div>
+            )}
+            {!isLastNameExist && (
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="name" className="text-gray-300">
+                  LastName
+                </Label>
+                <Input
+                  id="lastname"
+                  placeholder="Enter lastname"
+                  className="bg-gray-300"
+                  {...register("lastname")}
+                />
+                {errors.lastname && (
+                  <div className="text-sm text-red-600">
+                    {errors.lastname.message}
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="name" className="text-gray-300">
                 Continue as
