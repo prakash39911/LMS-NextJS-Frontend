@@ -46,7 +46,7 @@ export default async function MyCourses() {
         {courses &&
           courses.map((eachCourse: courseType) => (
             <div key={eachCourse.id}>
-              <CourseCard course={eachCourse} />
+              <CourseCard course={eachCourse} isOwner={true} />
             </div>
           ))}
       </div>

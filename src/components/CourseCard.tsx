@@ -10,15 +10,17 @@ import { ArrowRight } from "lucide-react";
 export default function CourseCard({
   course,
   ispurchasedCourse,
+  isOwner,
 }: {
   course: courseType;
   ispurchasedCourse?: boolean;
+  isOwner?: boolean;
 }) {
   const router = useRouter();
   const { ratings } = CalRating(course.rating);
   return (
     <div
-      className="w-96 h-96 bg-gray-900 text-gray-300 shadow-md shadow-gray-500 cursor-pointer"
+      className="w-96 h-auto bg-gray-900 text-gray-300 shadow-md shadow-gray-500 cursor-pointer"
       onClick={() => router.push(`/course/${course.id}`)}
     >
       <div className=" h-full grid-rows-2">
@@ -65,7 +67,21 @@ export default function CourseCard({
               <div>%</div>
             </div>
           ) : (
-            <div className="text-xl font-serif">Rs.{course.price}</div>
+            <div className="flex items-center justify-between">
+              <div className="text-xl">Rs.{course.price}</div>
+              <div>
+                {isOwner && (
+                  <div className="flex gap-2 items-center border border-green-700 p-1">
+                    <div className="font-bold text-gray-300">
+                      No of Enrolled Students:
+                    </div>
+                    <div className="text-green-400 font-bold text-xl">
+                      {course.enrolledStudents.length}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           )}
         </div>
       </div>

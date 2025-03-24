@@ -30,6 +30,7 @@ type courseType = {
       video_thumbnailUrl: string;
     }[];
   }[];
+  enrolledStudents: { id: string }[];
 };
 
 type courseDetailPageType = {

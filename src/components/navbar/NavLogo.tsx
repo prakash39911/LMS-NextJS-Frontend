@@ -11,7 +11,10 @@ export default function NavLogo() {
     process.env.LOGO_PUBLIC_ID || "Screenshot_2025-03-15_180926_y4zywd";
 
   return (
-    <div className="cursor-pointer" onClick={() => router.push("/")}>
+    <div
+      className="cursor-pointer flex gap-1 items-center"
+      onClick={() => router.push("/")}
+    >
       <CldImage src={logo} width={40} height={40} alt="LMS" />
     </div>
   );

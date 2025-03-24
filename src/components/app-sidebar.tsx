@@ -1,6 +1,13 @@
 "use client";
 
-import { Calendar, Book, Inbox, Settings, BookAIcon } from "lucide-react";
+import {
+  Calendar,
+  Book,
+  Inbox,
+  Settings,
+  BookAIcon,
+  BookOpen,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -62,6 +69,9 @@ export function AppSidebar({
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-2xl font-semibold">
+            <div>
+              <BookOpen className="text-blue-500 mr-2" />
+            </div>
             LMS
           </SidebarGroupLabel>
           <SidebarGroupContent>
