@@ -1,3 +1,5 @@
+import { FilterStateType } from "@/components/Filter";
+
 export function makeid() {
   let result = "";
   const characters =
@@ -89,4 +91,26 @@ export function DatabaseDateToGeneralDate(date: Date) {
   const day = String(convertedDate.getDate()).padStart(2, "0");
 
   return `${day}/${month}/${year}`;
+}
+
+export function areObjectsEqual(obj1: FilterStateType, obj2: FilterStateType) {
+  if (!obj1 || !obj2) return false;
+
+  const areArraysEqualUnordered = (arr1: string[], arr2: string[]) => {
+    if (arr1.length !== arr2.length) return false;
+    return (
+      arr1.every((item) => arr2.includes(item)) &&
+      arr2.every((item) => arr1.includes(item))
+    );
+  };
+
+  const areArraysEqualOrdered = (arr1: number[], arr2: number[]) => {
+    if (arr1.length !== arr2.length) return false;
+    return arr1.every((item, index) => item === arr2[index]);
+  };
+
+  return (
+    areArraysEqualUnordered(obj1.selectedRating, obj2.selectedRating) &&
+    areArraysEqualOrdered(obj1.priceRange, obj2.priceRange)
+  );
 }

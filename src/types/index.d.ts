@@ -58,5 +58,14 @@ type courseDetailPageType = {
 
 type GetAllCoursesParams = {
   ratings: string;
-  prices: string;
+  priceRange: string;
+};
+
+type getFilterPresetDataType = {
+  SavedFilterData: {
+    id: string;
+    name: string;
+    selectedRating: string[];
+    priceRange: number[];
+  }[];
 };

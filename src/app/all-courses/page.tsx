@@ -29,6 +29,11 @@ export default async function AllCourses({
       <div>
         <div className="relative">
           <div className="flex flex-row gap-6 flex-wrap ml-6 mt-5">
+            {courses?.length === 0 && (
+              <div className="flex justify-center text-2xl text-gray-300">
+                No Courses Matches the Filter
+              </div>
+            )}
             {courses &&
               courses.map((eachCourse: courseType) => (
                 <div key={eachCourse.id}>

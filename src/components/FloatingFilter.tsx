@@ -31,21 +31,21 @@ export default function FloatingFilter() {
 
       {/* Filter Menu */}
       <div
-        className={`fixed right-0 h-full top-14 w-72 bg-gray-900 shadow-lg transform transition-transform duration-300 ease-in-out ${
+        className={`fixed right-0 h-full top-14 w-72 bg-transparent/30 backdrop-blur-md shadow-lg transform transition-transform duration-300 ease-in-out ${
           isFilterVisible ? "translate-x-0" : "translate-x-full"
         } z-40`}
       >
         <div className="text-white flex flex-col gap-5">
-          <div
-            className="flex justify-end mr-2 mt-2 cursor-pointer"
+          <span
+            className="cursor-pointer w-8 fixed right-2 top-2"
             onClick={() => {
               setIsFilterVisible(false);
               setIsButtonVisible(true);
             }}
           >
             <X size={35} />
-          </div>
-          <div>
+          </span>
+          <div className="relative top-14">
             <Filter />
           </div>
         </div>

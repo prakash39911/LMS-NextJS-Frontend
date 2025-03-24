@@ -3,16 +3,23 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 
 type Props = {
+  selectedPrices: number[];
   onChange: (priceRange: number[]) => void;
 };
 
-export default function PriceFilter({ onChange }: Props) {
-  const [value, setValue] = React.useState<number[]>([0, 1000]);
+export default function PriceFilter({ onChange, selectedPrices }: Props) {
+  const [value, setValue] = React.useState<number[]>(
+    selectedPrices?.length > 0 ? selectedPrices : [0, 1000]
+  );
 
   const handleChange = (event: Event, newValue: number | number[]) => {
     setValue(newValue as number[]);
     onChange(newValue as number[]);
   };
+
+  React.useEffect(() => {
+    setValue(selectedPrices?.length ? selectedPrices : [0, 1000]);
+  }, [selectedPrices]);
 
   return (
     <div>
