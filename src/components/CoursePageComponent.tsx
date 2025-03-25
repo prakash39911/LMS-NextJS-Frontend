@@ -25,7 +25,7 @@ import {
   secondsToMinuteForEachVideo,
 } from "@/lib/utilityFunctions";
 import { CldImage } from "next-cloudinary";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import RatingDialog from "./RatingDialog";
@@ -59,7 +59,7 @@ export default function CoursePageComponent({
   isTeacherOwner: boolean;
 }) {
   const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
-
+  const { user } = useUser();
   const router = useRouter();
   const { getToken } = useAuth();
   const { ratings, noOfRating } = CalRating(course.rating);
@@ -74,6 +74,10 @@ export default function CoursePageComponent({
 
   const handleClick = async (data: { amount: string }) => {
     try {
+      if (!userId) {
+        router.push("/signin");
+        return;
+      }
       const token = await getToken();
 
       const isRazorpayLoaded = await loadRazorpayScript();
@@ -87,14 +91,14 @@ export default function CoursePageComponent({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // Authorization: `Basic ${process.env.RZPAY_KEY_ID}:${process.env.RZPAY_SECRET_KEY}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),
       });
       const finalResponse = await response.json();
 
       if (!finalResponse.success) {
-        console.error("Order was not created:", finalResponse);
+        toast.error("Order Creation Failed");
         return;
       }
 
@@ -103,37 +107,42 @@ export default function CoursePageComponent({
         amount: data.amount,
         currency: "INR",
         name: "LMS Website",
-        description: "Payment for Order",
+        description: "Payment for Course",
         order_id: finalResponse?.data?.id,
         prefill: {
-          name: "John Doe",
-          email: "john@example.com",
+          name: user?.fullName || "",
+          email: user?.emailAddresses || "",
         },
         handler: async function (response: any) {
-          const result = await fetch(
-            `${API_END_POINT}api/payment/verify-payment`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({
-                razorpay_order_id: finalResponse?.data?.id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                courseId: course.id,
-              }),
+          try {
+            const result = await fetch(
+              `${API_END_POINT}api/payment/verify-payment`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                  razorpay_order_id: finalResponse?.data?.id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                  courseId: course.id,
+                }),
+              }
+            );
+
+            const finalResult = await result.json();
+
+            if (finalResult.status) {
+              toast.success("Payment Successful");
+              router.replace(`/learn/${course.id}`);
+            } else {
+              toast.error("Payment verification failed");
             }
-          );
-
-          const finalResult = await result.json();
-
-          if (finalResult.status) {
-            toast("Payment Was Successfull");
-            router.push(`/learn/${course.id}`);
-          } else {
-            alert("Payment verification failed");
+          } catch (verificationError) {
+            console.error("Payment verification error:", verificationError);
+            toast.error("An error occurred during payment verification");
           }
         },
       };
@@ -141,7 +150,8 @@ export default function CoursePageComponent({
       const razor = new (window as any).Razorpay(options);
       razor.open();
     } catch (error) {
-      console.log(error);
+      console.error("Payment initiation error:", error);
+      toast.error("An error occurred while initiating payment");
     }
   };
 
@@ -222,16 +232,13 @@ export default function CoursePageComponent({
                           ) : (
                             <button
                               className="w-full bg-blue-700 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg mb-4 transition"
-                              onClick={() => {
-                                if (userId && !isPurchased) {
-                                  handleClick({
-                                    amount:
-                                      Math.ceil(course.price * 0.9).toString() +
-                                      "00",
-                                  });
-                                }
-                                router.push("/signin");
-                              }}
+                              onClick={() =>
+                                handleClick({
+                                  amount:
+                                    Math.ceil(course.price * 0.9).toString() +
+                                    "00",
+                                })
+                              }
                             >
                               {userId
                                 ? isPurchased
