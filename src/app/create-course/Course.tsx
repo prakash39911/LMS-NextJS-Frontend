@@ -140,7 +140,7 @@ function CreateCourseForm({ name }: { name: string }) {
                 {image.publicId && (
                   <div className="flex flex-row gap-4 items-center">
                     <span className="text-gray-400">
-                      <Image size={20} />
+                      <Image size={20} aria-label="Upload icon" />
                     </span>
                     <CldImage
                       src={image.publicId}

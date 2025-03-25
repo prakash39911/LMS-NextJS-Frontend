@@ -38,7 +38,7 @@ export const useGetFilterPresetApi = () => {
     } finally {
       setLoading(false);
     }
-  }, [getToken]);
+  }, [getToken, API_END_POINT]);
 
   useEffect(() => {
     fetchData();
