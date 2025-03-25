@@ -44,7 +44,10 @@ export default async function MyCourses() {
     }
 
     return (
-      <div className="flex flex-row gap-6 flex-wrap ml-6 mt-5">
+      <div className="flex flex-col gap-6 flex-wrap ml-6 mt-5">
+        <div className="mx-auto text-4xl bg-clip-text font-bold text-transparent bg-gradient-to-r from-blue-500 to-purple-700">
+          Created Courses
+        </div>
         {courses &&
           courses.map((eachCourse: courseType) => (
             <div key={eachCourse.id}>

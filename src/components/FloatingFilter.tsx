@@ -15,17 +15,17 @@ export default function FloatingFilter() {
 
   return (
     <div>
-      {/* Fixed Button to toggle filter */}
       <button
         onClick={toggleFilter}
         hidden={!isButtonVisible}
-        className="fixed right-4 top-20 bg-blue-700 text-white p-2 rounded-full shadow-lg z-50"
+        className="fixed right-4 top-20 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 text-white px-4 py-2.5 rounded-full shadow-md shadow-indigo-500 z-50 transition-all duration-300 ease-in-out transform hover:scale-125 hover:shadow-xl group"
       >
-        <div className="flex gap-0.5 p-0.5 text-gray-100 font-semibold">
-          <span>
-            <FilterIcon size={20} />
-          </span>
-          Filter
+        <div className="flex items-center gap-2">
+          <FilterIcon
+            size={20}
+            className="group-hover:rotate-180 transition-transform duration-300"
+          />
+          <span className="font-medium text-sm tracking-wide">Filter</span>
         </div>
       </button>
 

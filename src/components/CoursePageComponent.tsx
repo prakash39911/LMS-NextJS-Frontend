@@ -149,7 +149,7 @@ export default function CoursePageComponent({
     <div>
       <div className="vertical-center bg-gray-900 text-white">
         {/* Hero Section */}
-        <div className="bg-gray-800 py-5">
+        <div className="bg-gray-900 py-5">
           <div className="container mx-auto px-4 max-w-7xl">
             <div className="grid md:grid-cols-3 gap-8">
               <div className="md:col-span-2">

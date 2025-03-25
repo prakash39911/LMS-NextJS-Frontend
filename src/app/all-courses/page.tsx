@@ -29,18 +29,23 @@ export default async function AllCourses({
     return (
       <div>
         <div className="relative">
-          <div className="flex flex-row gap-6 flex-wrap ml-6 mt-5">
-            {courses?.length === 0 && (
-              <div className="flex justify-center text-2xl text-gray-300">
-                No Courses Matches the Filter
-              </div>
-            )}
-            {courses &&
-              courses.map((eachCourse: courseType) => (
-                <div key={eachCourse.id}>
-                  <CourseCard course={eachCourse} />
+          <div className="flex flex-col gap-6 flex-wrap ml-6 mt-5">
+            <div className="mx-auto text-4xl bg-clip-text font-bold text-transparent bg-gradient-to-r from-blue-500 to-purple-700">
+              All Courses
+            </div>
+            <div className="flex flex-wrap gap-5">
+              {courses?.length === 0 && (
+                <div className="flex mx-auto mt-5 text-3xl text-gray-400">
+                  No Courses Matches the Filter
                 </div>
-              ))}
+              )}
+              {courses &&
+                courses.map((eachCourse: courseType) => (
+                  <div key={eachCourse.id}>
+                    <CourseCard course={eachCourse} />
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
         <FloatingFilter />

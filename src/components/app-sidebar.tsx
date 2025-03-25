@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Calendar,
-  Book,
-  Inbox,
-  Settings,
-  BookAIcon,
-  BookOpen,
-} from "lucide-react";
+import { Book, Inbox, Settings, BookAIcon, BookOpen } from "lucide-react";
 
 import {
   Sidebar,
@@ -39,19 +32,14 @@ const items = [
     icon: Inbox,
   },
   {
-    title: "Billing",
-    url: "#",
-    icon: Calendar,
+    title: "Create Course",
+    url: "/create-course",
+    icon: BookAIcon,
   },
   {
     title: "Profile",
     url: "/manage-account",
     icon: Settings,
-  },
-  {
-    title: "Create Course",
-    url: "/create-course",
-    icon: BookAIcon,
   },
 ];
 
@@ -66,13 +54,15 @@ export function AppSidebar({
 
   return (
     <Sidebar className="dark">
-      <SidebarContent>
+      <SidebarContent className="bg-gray-900">
         <SidebarGroup>
           <SidebarGroupLabel className="text-2xl font-semibold">
             <div>
-              <BookOpen className="text-blue-500 mr-2" />
+              <BookOpen className="text-indigo-500 mr-2" />
             </div>
-            LMS
+            <div className="text-2xl bg-gradient-to-r from-blue-500 to-indigo-600 bg-clip-text text-transparent">
+              LMS
+            </div>
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="mt-4">

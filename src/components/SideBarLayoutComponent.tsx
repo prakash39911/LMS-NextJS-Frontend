@@ -18,7 +18,7 @@ export default function SideBarLayoutComponent({
   return (
     <SidebarProvider>
       <AppSidebar userId={userId} currentUserData={currentUserData} />
-      <div className="bg-gray-800 text-gray-400 border-r mt-3 border-gray-900">
+      <div className="bg-gray-900 text-gray-400 border-r mt-3 border-gray-900">
         <SidebarTrigger />
       </div>
     </SidebarProvider>

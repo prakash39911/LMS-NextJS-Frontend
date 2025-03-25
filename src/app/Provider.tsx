@@ -13,14 +13,14 @@ export default async function Provider({
   const currentUserData = await currentUser();
 
   return (
-    <div className="grid grid-cols-[auto_1fr] bg-gray-800">
+    <div className="grid grid-cols-[auto_1fr] bg-gray-900">
       <div>
         <SideBarLayoutComponent
           userId={userId}
           currentUserData={currentUserData?.publicMetadata}
         />
       </div>
-      <div className="bg-gray-800">
+      <div className="bg-gray-900">
         <Navbar />
         {children}
         <Toaster />

@@ -96,7 +96,9 @@ function CreateCourseForm({ name }: { name: string }) {
 
   return (
     <div className="flex flex-col gap-2 items-center">
-      <div className="text-5xl font-bold text-gray-300 mb-2">Create Course</div>
+      <div className="text-5xl font-bold text-transparent bg-gradient-to-r from-indigo-600 to-purple-700 bg-clip-text mb-2">
+        Create Course
+      </div>
       <form
         onSubmit={handleSubmit(actualSubmit)}
         className="flex flex-col gap-2 items-center"
@@ -108,7 +110,7 @@ function CreateCourseForm({ name }: { name: string }) {
                 type="text"
                 placeholder="Course title"
                 {...register("title")}
-                className="py-1.5 w-[350px] bg-slate-700 border border-gray-400 rounded-lg px-1 text-gray-200"
+                className="py-1.5 w-[350px] bg-slate-800 border border-gray-400 rounded-lg px-1 text-gray-200"
               />
               {errors.title && (
                 <div className="text-red-800">{errors.title.message}</div>
@@ -119,7 +121,7 @@ function CreateCourseForm({ name }: { name: string }) {
                 type="number"
                 placeholder="Price"
                 {...register("price", { valueAsNumber: true })}
-                className="py-1.5 w-[350px] bg-slate-700 border border-gray-400 rounded-lg px-1 text-gray-200"
+                className="py-1.5 w-[350px] bg-slate-800 border border-gray-400 rounded-lg px-1 text-gray-200"
               />
 
               {errors.price && (
@@ -163,7 +165,7 @@ function CreateCourseForm({ name }: { name: string }) {
             <textarea
               placeholder="Description"
               {...register("description")}
-              className="py-1.5 w-[350px] bg-slate-700 border border-gray-400 rounded-lg px-1 text-gray-200"
+              className="py-1.5 w-[350px] bg-slate-800 border border-gray-400 rounded-lg px-1 text-gray-200"
             />
             {errors.description && (
               <div className="text-red-800">{errors.description.message}</div>
@@ -233,7 +235,7 @@ const ManageSection = ({
       {sectionFields.map((section, sectionIndex) => {
         return (
           <div
-            className="p-2 w-[1200px] bg-gray-700 rounded-lg border border-gray-600 flex flex-col gap-2 pl-4"
+            className="p-2 w-[1200px] bg-gray-800 rounded-lg border border-gray-600 flex flex-col gap-2 pl-4"
             key={section.id}
           >
             <div className="text-gray-400 flex justify-between border-b border-b-gray-800">
@@ -246,7 +248,7 @@ const ManageSection = ({
                     type="text"
                     placeholder="Section name"
                     {...register(`section.${sectionIndex}.sectionName`)}
-                    className="py-1 w-[350px] bg-slate-700 border border-gray-400 rounded-lg px-1 text-gray-200"
+                    className="py-1 w-[350px] bg-slate-800 border border-gray-400 rounded-lg px-1 text-gray-200"
                   />
                   {errors.section?.[sectionIndex]?.sectionName && (
                     <div className="text-red-800">
@@ -364,7 +366,7 @@ const ManageVideoSection = ({
         return (
           <div
             key={video.id}
-            className="p-2 w-[1100px] h-[115px] bg-gray-800 rounded-lg border border-gray-600 flex flex-col gap-2 pl-4"
+            className="p-2 w-[1100px] h-[115px] bg-gray-900 rounded-lg border border-gray-600 flex flex-col gap-2 pl-4"
           >
             <div className="text-gray-400 flex justify-between border-b border-b-gray-600">
               <div className="flex flex-row gap-1 items-center mb-1.5">
@@ -376,7 +378,7 @@ const ManageVideoSection = ({
                     {...register(
                       `section.${sectionIndex}.videoSection.${videoIndex}.video_title`
                     )}
-                    className="py-1 w-[350px] bg-slate-700 border border-gray-400 rounded-lg px-1 text-gray-200"
+                    className="py-1 w-[350px] bg-slate-800 border border-gray-400 rounded-lg px-1 text-gray-200"
                   />
                   {errors.section?.[sectionIndex]?.videoSection?.[videoIndex]
                     ?.video_title && (

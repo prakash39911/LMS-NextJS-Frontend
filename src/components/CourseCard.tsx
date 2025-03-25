@@ -5,7 +5,7 @@ import { StarRating } from "./StarComponent";
 import { CalRating } from "@/lib/utilityFunctions";
 import { useRouter } from "next/navigation";
 import { CldImage } from "next-cloudinary";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Users } from "lucide-react";
 
 export default function CourseCard({
   course,
@@ -20,70 +20,68 @@ export default function CourseCard({
   const { ratings } = CalRating(course.rating);
   return (
     <div
-      className="w-96 h-auto bg-gray-900 text-gray-300 shadow-md shadow-gray-500 cursor-pointer"
+      className="w-[400px] bg-gray-800 rounded-xl overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/40 hover:cursor-pointer"
       onClick={() => router.push(`/course/${course.id}`)}
     >
-      <div className=" h-full grid-rows-2">
-        <div className="h-2/3">
-          <CldImage
-            src={course.main_image}
-            height={300}
-            width={300}
-            alt="course image"
-            className="w-full h-full aspect-video object-cover"
-          />
-        </div>
-        <div className="h-1/3 bg-gray-700 p-2 flex flex-col gap-4">
-          <div className="flex justify-between items-center mr-2">
-            <div className="font-bold text-2xl text-gray-300">
-              {course.title}
-            </div>
-            {ispurchasedCourse && (
-              <div>
-                <button
-                  className="py-1.5 px-1.5 bg-transparent border border-gray-400 shadow-sm rounded-md hover:bg-gray-900 hover:text-gray-100 hover:border-gray-100"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    router.push(`/learn/${course.id}`);
-                  }}
-                >
-                  <div className="flex gap-0.5 items-center">
-                    <span>Continue to Course</span>
-                    <span>
-                      <ArrowRight size={20} />
-                    </span>
-                  </div>
-                </button>
-              </div>
-            )}
-          </div>
+      <div className="relative group">
+        <CldImage
+          src={course.main_image}
+          height={300}
+          width={300}
+          alt="course image"
+          className="w-full h-full aspect-video object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60" />
+      </div>
 
-          <div>
-            <StarRating rating={ratings} />
-          </div>
-          {ispurchasedCourse ? (
-            <div className="text-xl flex justify-between">
-              <div>Completed</div>
-              <div>%</div>
-            </div>
-          ) : (
-            <div className="flex items-center justify-between">
-              <div className="text-xl">Rs.{course.price}</div>
-              <div>
-                {isOwner && (
-                  <div className="flex gap-2 items-center border border-green-700 p-1">
-                    <div className="font-bold text-gray-300">
-                      No of Enrolled Students:
-                    </div>
-                    <div className="text-green-400 font-bold text-xl">
-                      {course.enrolledStudents.length}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+      <div className="p-6 space-y-4 border border-purple-700/30">
+        <div className="space-y-2">
+          <h3 className="text-2xl font-bold text-white tracking-wide">
+            {course.title}
+          </h3>
+          <StarRating rating={ratings} />
         </div>
+
+        {ispurchasedCourse ? (
+          <div className="space-y-4">
+            <div className="w-full bg-gray-700 rounded-full h-2">
+              <div className="w-[45%] h-full bg-purple-500 rounded-full" />
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-400">Progress</span>
+              <span className="text-purple-400 font-medium">45% Complete</span>
+            </div>
+            <button
+              className="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white py-2.5 px-4 rounded-lg transition-colors duration-200"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/learn/${course.id}`);
+              }}
+            >
+              Continue Learning
+              <ArrowRight size={18} />
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="text-2xl font-bold text-white">
+                ₹{course.price.toLocaleString()}
+              </div>
+              {isOwner && (
+                <div className="flex items-center gap-2 bg-gray-700/50 py-1.5 px-3 rounded-full">
+                  <Users size={16} className="text-purple-400" />
+                  <span className="text-sm font-medium text-gray-300">
+                    {course.enrolledStudents.length} enrolled
+                  </span>
+                </div>
+              )}
+            </div>
+            <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2.5 px-4 rounded-lg transition-colors duration-200">
+              Learn More
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

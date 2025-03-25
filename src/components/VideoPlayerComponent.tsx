@@ -18,8 +18,8 @@ export default function VideoPlayerComponent({
   });
 
   return (
-    <div className=" bg-gray-800 vertical-center w-full flex">
-      <div>
+    <div className=" bg-gray-900 vertical-center w-full flex">
+      <div className="border-r-2 border-gray-800">
         <VideoPlayerSideBar
           setCurrentVideo={setCurrentVideo}
           currentVideo={currentVideo}

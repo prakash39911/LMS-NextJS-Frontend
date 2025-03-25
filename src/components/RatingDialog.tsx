@@ -25,7 +25,9 @@ export default function RatingDialog({ courseId }: { courseId: string }) {
   const handleSubmit = async () => {
     const token = await getToken();
 
-    if (selected > 0 && selected < 5) {
+    console.log("Inside Submit");
+
+    if (selected > 0 && selected <= 5) {
       const submitRating = await fetch(
         `${API_END_POINT}api/course/giveRating/${courseId}`,
         {
