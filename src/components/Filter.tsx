@@ -18,6 +18,8 @@ export type FilterStateType = {
 };
 
 const Filter = () => {
+  const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const [currentSelectedPresetId, setCurrentSelectedPresetId] = useState("");
   const [isPresetSaved, setIsPresetSaved] = useState(false);
   const [isDefaultFilter, setIsDefaultFilter] = useState(true);
@@ -84,7 +86,7 @@ const Filter = () => {
     const presetName = event.target.presetName.value;
 
     const result = await fetch(
-      "http://localhost:8000/api/advancedFilter/createPreset",
+      `${API_END_POINT}api/advancedFilter/createPreset`,
       {
         method: "POST",
         headers: {

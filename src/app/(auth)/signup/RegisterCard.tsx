@@ -21,6 +21,8 @@ import {
 } from "@prakash39911/sharedlms";
 
 export default function RegisterCard() {
+  const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const router = useRouter();
 
   const {
@@ -36,7 +38,7 @@ export default function RegisterCard() {
   const onActualSubmit = async (data: registerUserSchemaType) => {
     console.log(data);
 
-    const result = await fetch("http://localhost:8000/user/register", {
+    const result = await fetch(`${API_END_POINT}user/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),

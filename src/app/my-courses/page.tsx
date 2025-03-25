@@ -8,11 +8,13 @@ export default async function MyCourses() {
   const { sessionClaims, getToken } = await auth();
   const token = await getToken();
 
+  const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   if (sessionClaims?.metadata.role === "student") redirect("/");
 
   try {
     const response = await fetch(
-      "http://localhost:8000/api/course/getCourseForteacher",
+      `${API_END_POINT}api/course/getCourseForteacher`,
       {
         method: "GET",
         headers: {

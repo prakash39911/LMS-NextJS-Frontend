@@ -6,6 +6,8 @@ export const useGetFilterPresetApi = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const { getToken } = useAuth();
 
   const fetchData = useCallback(async () => {
@@ -14,7 +16,7 @@ export const useGetFilterPresetApi = () => {
       const token = await getToken();
 
       const result = await fetch(
-        "http://localhost:8000/api/advancedFilter/getFilterPresetForUser",
+        `${API_END_POINT}api/advancedFilter/getFilterPresetForUser`,
         {
           method: "GET",
           headers: {

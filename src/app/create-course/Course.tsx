@@ -31,6 +31,8 @@ function CreateCourseForm({ name }: { name: string }) {
 
   const fullName = user?.fullName || name;
 
+  const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const {
     videos,
     image,
@@ -72,7 +74,7 @@ function CreateCourseForm({ name }: { name: string }) {
       const finalObjToBeSubmitted = { ...data, ownerName: fullName };
       const token = await getToken();
 
-      const result = await fetch("http://localhost:8000/api/course/create", {
+      const result = await fetch(`${API_END_POINT}api/course/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

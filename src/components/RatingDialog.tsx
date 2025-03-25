@@ -20,12 +20,14 @@ export default function RatingDialog({ courseId }: { courseId: string }) {
   const [open, setOpen] = useState(false);
   const { getToken } = useAuth();
 
+  const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const handleSubmit = async () => {
     const token = await getToken();
 
     if (selected > 0 && selected < 5) {
       const submitRating = await fetch(
-        `http://localhost:8000/api/course/giveRating/${courseId}`,
+        `${API_END_POINT}api/course/giveRating/${courseId}`,
         {
           method: "POST",
           headers: {

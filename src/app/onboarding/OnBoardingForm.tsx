@@ -27,6 +27,8 @@ export default function OnBoardingForm() {
   const { getToken } = useAuth();
   const router = useRouter();
 
+  const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const isFirstNameExist = user?.firstName;
   const isLastNameExist = user?.lastName;
 
@@ -44,17 +46,14 @@ export default function OnBoardingForm() {
     try {
       const token = await getToken();
 
-      const result = await fetch(
-        "http://localhost:8000/api/updateuserdata/addRole",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const result = await fetch(`${API_END_POINT}api/updateuserdata/addRole`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
 
       if (result.ok) {
         await user?.reload();

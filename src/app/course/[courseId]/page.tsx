@@ -8,14 +8,16 @@ export default async function page({
   params: Promise<{ courseId: string }>;
 }) {
   const { courseId } = await params;
+  const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const { sessionClaims, getToken, userId } = await auth();
   const token = await getToken();
   const isTeacher = sessionClaims?.metadata.role === "teacher";
 
   try {
     const apiUrl = isTeacher
-      ? `http://localhost:8000/api/course/isOwnerOfVideo/${courseId}`
-      : `http://localhost:8000/api/course//isAlreadyPurchased/${courseId}`;
+      ? `${API_END_POINT}api/course/isOwnerOfVideo/${courseId}`
+      : `${API_END_POINT}api/course//isAlreadyPurchased/${courseId}`;
 
     const isPurchased = await fetch(apiUrl, {
       method: "GET",
@@ -26,7 +28,7 @@ export default async function page({
     const apiResponseData = await isPurchased.json();
 
     const response = await fetch(
-      `http://localhost:8000/api/course/detail/${courseId}`,
+      `${API_END_POINT}api/course/detail/${courseId}`,
       {
         method: "GET",
       }

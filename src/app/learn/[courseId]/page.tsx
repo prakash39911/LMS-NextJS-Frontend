@@ -12,12 +12,13 @@ export default async function page({
     const { courseId } = await params;
     const { getToken, sessionClaims } = await auth();
     const token = await getToken();
+    const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
 
     const isTeacher = sessionClaims?.metadata.role === "teacher";
 
     const apiUrl = isTeacher
-      ? `http://localhost:8000/api/course/isOwnerOfVideo/${courseId}`
-      : `http://localhost:8000/api/course/learn/${courseId}`;
+      ? `${API_END_POINT}api/course/isOwnerOfVideo/${courseId}`
+      : `${API_END_POINT}api/course/learn/${courseId}`;
 
     const isUserAllowed = await fetch(apiUrl, {
       method: "GET",

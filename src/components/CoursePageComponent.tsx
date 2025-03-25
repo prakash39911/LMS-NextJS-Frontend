@@ -58,6 +58,8 @@ export default function CoursePageComponent({
   isPurchased: boolean;
   isTeacherOwner: boolean;
 }) {
+  const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const router = useRouter();
   const { getToken } = useAuth();
   const { ratings, noOfRating } = CalRating(course.rating);
@@ -81,17 +83,14 @@ export default function CoursePageComponent({
         return;
       }
 
-      const response = await fetch(
-        "http://localhost:8000/api/payment/createOrder",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // Authorization: `Basic ${process.env.RZPAY_KEY_ID}:${process.env.RZPAY_SECRET_KEY}`,
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`${API_END_POINT}api/payment/createOrder`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Basic ${process.env.RZPAY_KEY_ID}:${process.env.RZPAY_SECRET_KEY}`,
+        },
+        body: JSON.stringify(data),
+      });
       const finalResponse = await response.json();
 
       if (!finalResponse.success) {
@@ -112,7 +111,7 @@ export default function CoursePageComponent({
         },
         handler: async function (response: any) {
           const result = await fetch(
-            "http://localhost:8000/api/payment/verify-payment",
+            `${API_END_POINT}api/payment/verify-payment`,
             {
               method: "POST",
               headers: {

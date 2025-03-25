@@ -8,6 +8,7 @@ export default async function AllCourses({
   searchParams: Promise<GetAllCoursesParams>;
 }) {
   const searchParamsValue = await searchParams;
+  const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   try {
     // Convert searchParamsValue to a query string
@@ -15,7 +16,7 @@ export default async function AllCourses({
 
     // Append the query string to the URL
     const response = await fetch(
-      `http://localhost:8000/api/course/getAllCourse?${queryString}`
+      `${API_END_POINT}api/course/getAllCourse?${queryString}`
     );
 
     if (!response.ok) {

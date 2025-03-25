@@ -16,9 +16,11 @@ export default function VideoPlayerSideBar({
   setisCollapsed,
   course,
 }: sideBarProps) {
+  const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   const handleVideoClick = async (videoSectionId: string) => {
     const result = await fetch(
-      `http://localhost:8000/api/course/video/${videoSectionId}`,
+      `${API_END_POINT}api/course/video/${videoSectionId}`,
       {
         method: "GET",
         headers: {

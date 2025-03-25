@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUserSchema, loginUserSchemaType } from "@prakash39911/sharedlms";
 
 export default function LoginCard() {
+  const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
   const router = useRouter();
 
   const {
@@ -33,7 +34,7 @@ export default function LoginCard() {
   const onActualSubmit = async (data: loginUserSchemaType) => {
     console.log(data);
 
-    const result = await fetch("http://localhost:8000/user/login", {
+    const result = await fetch(`${API_END_POINT}user/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
