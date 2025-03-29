@@ -60,6 +60,8 @@ export default function CoursePageComponent({
 }) {
   const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
   const { user } = useUser();
+  console.log("User Data from CLERK", user);
+
   const router = useRouter();
   const { getToken } = useAuth();
   const { ratings, noOfRating } = CalRating(course.rating);
@@ -111,12 +113,12 @@ export default function CoursePageComponent({
         order_id: finalResponse?.data?.id,
         prefill: {
           name: user?.fullName || "",
-          email: user?.emailAddresses || "",
+          email: user?.emailAddresses[0].emailAddress || "",
         },
         handler: async function (response: any) {
           try {
             const result = await fetch(
-              `${API_END_POINT}api/payment/verify-payment`,
+              `${API_END_POINT}api/payment/verify-payment-signature`,
               {
                 method: "POST",
                 headers: {
@@ -135,8 +137,8 @@ export default function CoursePageComponent({
             const finalResult = await result.json();
 
             if (finalResult.status) {
-              toast.success("Payment Successful");
-              router.replace(`/learn/${course.id}`);
+              toast.success("Payment verification success");
+              router.replace(`/payment-status${course.id}`);
             } else {
               toast.error("Payment verification failed");
             }
