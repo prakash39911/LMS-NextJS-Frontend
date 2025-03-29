@@ -122,6 +122,7 @@ export default function CoursePageComponent({
           // Executes after successfull payment
           try {
             console.log("handler response", response);
+            console.log("Token sent in handler fun", token);
 
             const result = await fetch(
               `${API_END_POINT}api/payment/verify-payment-signature`,
@@ -142,7 +143,7 @@ export default function CoursePageComponent({
             const finalResult = await result.json();
 
             if (finalResult.status) {
-              toast.success("Payment Received Successfully");
+              toast.success("Payment Received and Verified Successfully");
               router.replace(`/payment-status/${course.id}`);
             } else {
               toast.error("Payment verification failed");
