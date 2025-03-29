@@ -89,14 +89,17 @@ export default function CoursePageComponent({
         return;
       }
 
-      const response = await fetch(`${API_END_POINT}api/payment/createOrder`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${API_END_POINT}api/payment/createOrder/${course.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
       const finalResponse = await response.json();
 
       if (!finalResponse.success) {
@@ -116,7 +119,10 @@ export default function CoursePageComponent({
           email: user?.emailAddresses[0].emailAddress || "",
         },
         handler: async function (response: any) {
+          // Executes after successfull payment
           try {
+            console.log("handler response", response);
+
             const result = await fetch(
               `${API_END_POINT}api/payment/verify-payment-signature`,
               {
@@ -129,7 +135,6 @@ export default function CoursePageComponent({
                   razorpay_order_id: finalResponse?.data?.id,
                   razorpay_payment_id: response.razorpay_payment_id,
                   razorpay_signature: response.razorpay_signature,
-                  courseId: course.id,
                 }),
               }
             );
@@ -137,8 +142,8 @@ export default function CoursePageComponent({
             const finalResult = await result.json();
 
             if (finalResult.status) {
-              toast.success("Payment verification success");
-              router.replace(`/payment-status${course.id}`);
+              toast.success("Payment Received Successfully");
+              router.replace(`/payment-status/${course.id}`);
             } else {
               toast.error("Payment verification failed");
             }
