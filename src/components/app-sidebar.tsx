@@ -54,7 +54,7 @@ export function AppSidebar({
 
   return (
     <Sidebar className="dark">
-      <SidebarContent className="bg-gray-900">
+      <SidebarContent className="bg-gray-900 mt-14">
         <SidebarGroup>
           <SidebarGroupLabel className="text-2xl font-semibold">
             <div>

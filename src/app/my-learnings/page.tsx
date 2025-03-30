@@ -37,7 +37,7 @@ export default async function MyLearnings() {
         <div className="mx-auto text-4xl bg-clip-text font-bold text-transparent bg-gradient-to-r from-blue-500 to-purple-700">
           Purchased Courses
         </div>
-        <div className="flex flex-wrap gap-5">
+        <div className="flex flex-col items-center md:flex-row md:flex-wrap gap-5">
           {courses &&
             courses.map((eachCourse: courseType) => (
               <div key={eachCourse.id}>

@@ -11,7 +11,7 @@ export default function VideoPlayerComponent({
 }: {
   course: courseDetailPageType;
 }) {
-  const [isCollapsed, setisCollapsed] = useState(false);
+  const [isCollapsed, setisCollapsed] = useState(true);
   const [currentVideo, setCurrentVideo] = useState({
     id: course.section[0].videoSection[0].id,
     video_public_id: course.section[0].videoSection[0].video_public_id,

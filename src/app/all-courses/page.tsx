@@ -33,7 +33,7 @@ export default async function AllCourses({
             <div className="mx-auto text-4xl bg-clip-text font-bold text-transparent bg-gradient-to-r from-blue-500 to-purple-700">
               All Courses
             </div>
-            <div className="flex flex-wrap gap-5">
+            <div className="flex flex-col items-center md:flex-row md:flex-wrap gap-5">
               {courses?.length === 0 && (
                 <div className="flex mx-auto mt-5 text-3xl text-gray-400">
                   No Courses Matches the Filter
