@@ -11,19 +11,21 @@ export default async function Navbar() {
   // const user = await currentUser();
 
   return (
-    <div className="h-14 text-gray-300 flex w-full p-2 bg-gray-900 justify-between items-center border-b-2 border-gray-800">
-      <div className="flex gap-3 items-center">
-        <NavLogo />
-        <HomeButtonComponent />
-      </div>
-      <div className="flex flex-row gap-2">
-        {!userId && (
-          <div className="flex flex-row gap-3">
-            <ButtonComponent btnName="Signin" link="/signin" />
-            <ButtonComponent btnName="SignUp" link="/signup" />
-          </div>
-        )}
-        <UserButtonComponent />
+    <div className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-transparent border-b border-gray-700">
+      <div className="h-14 text-gray-300 flex w-full p-2 justify-between items-center pl-8">
+        <div className="flex gap-3 items-center">
+          <NavLogo />
+          <HomeButtonComponent />
+        </div>
+        <div className="flex flex-row gap-2">
+          {!userId && (
+            <div className="flex flex-row gap-3">
+              <ButtonComponent btnName="Signin" link="/signin" />
+              <ButtonComponent btnName="SignUp" link="/signup" />
+            </div>
+          )}
+          <UserButtonComponent />
+        </div>
       </div>
     </div>
   );

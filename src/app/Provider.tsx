@@ -22,7 +22,7 @@ export default async function Provider({
       </div>
       <div className="bg-gray-900">
         <Navbar />
-        {children}
+        <main className="relative top-14">{children}</main>
         <Toaster />
       </div>
     </div>
