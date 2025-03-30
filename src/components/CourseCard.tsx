@@ -20,7 +20,7 @@ export default function CourseCard({
   const { ratings } = CalRating(course.rating);
   return (
     <div
-      className="w-[400px] bg-gray-800 rounded-xl overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/40 hover:cursor-pointer"
+      className="w-80 md:w-96 bg-gray-800 rounded-xl overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/40 hover:cursor-pointer"
       onClick={() => router.push(`/course/${course.id}`)}
     >
       <div className="relative group">
