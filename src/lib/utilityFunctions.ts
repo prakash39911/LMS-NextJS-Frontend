@@ -114,3 +114,85 @@ export function areObjectsEqual(obj1: FilterStateType, obj2: FilterStateType) {
     areArraysEqualOrdered(obj1.priceRange, obj2.priceRange)
   );
 }
+
+export function calTotalStudentsDashboard(allDetails: DashBoardDataType[]) {
+  return allDetails.reduce(
+    (accu, curr) => (accu = accu + curr.enrolledStudents.length),
+    0
+  );
+}
+
+export function calTotalIncomeDashboard(allDetails: DashBoardDataType[]) {
+  return (
+    allDetails.reduce((accumulator, currentValue) => {
+      return (accumulator =
+        accumulator +
+        currentValue.enrolledStudents.reduce(
+          (accu, curr) => (accu += curr.amount),
+          0
+        ));
+    }, 0) / 100
+  );
+}
+
+// type ChartDataType = {
+//   date: string;
+//   courses_sold: number;
+// }[]
+
+// type DashBoardDataType = {
+//   id: string;
+//   enrolledStudents: {
+//       amount: number;
+//       created_at: string;
+//       courseId: string;
+//   }[];
+// }
+
+export function formatUnixTimestamp(unixTimestamp: number) {
+  const date = new Date(unixTimestamp * 1000); // timestamp is in seconds
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}-${month}-${year}`;
+}
+
+const generateEmptyChartData = () => {
+  const arr = [];
+  const nowInSeconds = Math.floor(Date.now() / 1000); // convert to seconds
+
+  for (let i = 29; i >= 0; i--) {
+    const timestamp = nowInSeconds - i * 86400; // go back 29, 28, ..., 0 days
+    arr.push({
+      date: formatUnixTimestamp(timestamp),
+      courses_sold: 0,
+    });
+  }
+
+  console.log("Created array", arr);
+  return arr;
+};
+
+export function dashBoardChartData(allDetails: DashBoardDataType[]) {
+  const emptyArr = generateEmptyChartData();
+  for (let i = 0; i < allDetails.length; i++) {
+    const currentArr = allDetails[i];
+
+    for (let j = 0; j < currentArr.enrolledStudents.length; j++) {
+      const currEle = currentArr.enrolledStudents[j];
+
+      for (let k = 0; k < emptyArr.length; k++) {
+        const element = emptyArr[k];
+
+        if (
+          element.date === formatUnixTimestamp(parseInt(currEle.created_at))
+        ) {
+          emptyArr[k].courses_sold += 1;
+        }
+      }
+    }
+  }
+
+  console.log("Final created Array", emptyArr);
+  return emptyArr;
+}

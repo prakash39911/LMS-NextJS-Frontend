@@ -70,3 +70,17 @@ type getFilterPresetDataType = {
     priceRange: number[];
   }[];
 };
+
+type DashBoardDataType = {
+  id: string;
+  enrolledStudents: {
+    amount: number;
+    created_at: string;
+    courseId: string;
+  }[];
+};
+
+type ChartDataType = {
+  date: string;
+  courses_sold: number;
+};

@@ -41,7 +41,7 @@ export function DataTable<TData, TValue>({
                 return (
                   <TableHead
                     key={header.id}
-                    className="text-gray-300 font-bold"
+                    className="text-gray-300 font-bold hover:bg-gray-700/50"
                   >
                     {header.isPlaceholder
                       ? null
@@ -73,7 +73,7 @@ export function DataTable<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                You have not Bought any courses!
               </TableCell>
             </TableRow>
           )}

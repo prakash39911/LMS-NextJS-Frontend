@@ -7,6 +7,7 @@ import {
   BookAIcon,
   BookOpen,
   Paperclip,
+  ChartNoAxesCombined,
 } from "lucide-react";
 
 import {
@@ -27,6 +28,11 @@ const items = [
     title: "All Courses",
     url: "/all-courses",
     icon: Book,
+  },
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: ChartNoAxesCombined,
   },
   {
     title: "My Courses",
@@ -86,7 +92,8 @@ export function AppSidebar({
                   return;
                 if (
                   (item.title === "My Courses" ||
-                    item.title === "Create Course") &&
+                    item.title === "Create Course" ||
+                    item.title === "Dashboard") &&
                   !isTeacher
                 )
                   return;
