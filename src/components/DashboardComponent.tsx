@@ -7,6 +7,7 @@ import {
   calTotalStudentsDashboard,
   dashBoardChartData,
 } from "@/lib/utilityFunctions";
+import PieChartComponent from "./PieChartComponent";
 
 export default function DashboardComponent({
   allDetails,
@@ -17,7 +18,7 @@ export default function DashboardComponent({
 
   return (
     <div className=" text-white p-6 vertical-center">
-      <div className="mx-auto">
+      <div className="mx-auto flex-col">
         <div className="flex mb-8">
           <div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-700 text-transparent bg-clip-text">
@@ -47,8 +48,9 @@ export default function DashboardComponent({
             color="text-yellow-500"
           />
         </div>
-        <div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <DashChart chartData={chartData} />
+          <PieChartComponent />
         </div>
       </div>
     </div>
