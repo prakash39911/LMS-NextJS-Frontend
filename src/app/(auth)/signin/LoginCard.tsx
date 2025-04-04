@@ -32,8 +32,6 @@ export default function LoginCard() {
   });
 
   const onActualSubmit = async (data: loginUserSchemaType) => {
-    console.log(data);
-
     const result = await fetch(`${API_END_POINT}user/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

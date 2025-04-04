@@ -55,22 +55,13 @@ export default function DashChart({
     const formattedDate = `${year}-${month}-${day}`;
     const date = new Date(formattedDate);
 
-    console.log("Database date:", date);
-
-    const todaysDate = new Date();
-    console.log("Today's date:", todaysDate);
-
     const daysToSubtract = timeRange === "7d" ? 7 : 30;
 
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - daysToSubtract);
 
-    console.log("Start date:", startDate);
-
     return date >= startDate;
   });
-
-  console.log("Filtered data", filteredData);
 
   return (
     <Card className="@container/card bg-gray-800 border border-gray-800">
@@ -87,7 +78,7 @@ export default function DashChart({
         <div className="absolute right-4 top-4">
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
-              className="@[767px]/card:hidden flex w-40 bg-transparent text-gray-300"
+              className="@[767px]/card:hidden flex w-40 bg-transparent text-gray-300 border border-gray-500"
               aria-label="Select a value"
             >
               <SelectValue placeholder="Last 3 months" />
@@ -106,7 +97,7 @@ export default function DashChart({
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
-          className="aspect-auto h-[350px] w-full"
+          className="aspect-auto h-[320px] w-full"
         >
           <AreaChart data={filteredData}>
             <defs>

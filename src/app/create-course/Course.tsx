@@ -74,7 +74,7 @@ function CreateCourseForm({ name }: { name: string }) {
       const finalObjToBeSubmitted = { ...data, ownerName: fullName };
       const token = await getToken();
 
-      const result = await fetch(`${API_END_POINT}api/course/create`, {
+      await fetch(`${API_END_POINT}api/course/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,8 +82,6 @@ function CreateCourseForm({ name }: { name: string }) {
         },
         body: JSON.stringify(finalObjToBeSubmitted),
       });
-      const finalResult = await result.json();
-      console.log(finalResult);
 
       reset();
       router.push("/all-courses");
@@ -360,8 +358,6 @@ const ManageVideoSection = ({
         (result.info.duration as number) || 0
       );
     }
-
-    console.log(result);
   };
   return (
     <div>

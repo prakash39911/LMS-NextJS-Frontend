@@ -60,7 +60,6 @@ export default function CoursePageComponent({
 }) {
   const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
   const { user } = useUser();
-  console.log("User Data from CLERK", user);
 
   const router = useRouter();
   const { getToken } = useAuth();
@@ -121,9 +120,6 @@ export default function CoursePageComponent({
         handler: async function (response: any) {
           // Executes after successfull payment
           try {
-            console.log("handler response", response);
-            console.log("Token sent in handler fun", token);
-
             const result = await fetch(
               `${API_END_POINT}api/payment/verify-payment-signature`,
               {

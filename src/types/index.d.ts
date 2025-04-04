@@ -73,6 +73,7 @@ type getFilterPresetDataType = {
 
 type DashBoardDataType = {
   id: string;
+  title: string;
   enrolledStudents: {
     amount: number;
     created_at: string;
@@ -83,4 +84,9 @@ type DashBoardDataType = {
 type ChartDataType = {
   date: string;
   courses_sold: number;
+};
+
+type PieChartDataType = {
+  course_name: string;
+  totalIncome: number;
 };

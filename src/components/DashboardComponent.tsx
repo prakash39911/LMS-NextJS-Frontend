@@ -6,6 +6,7 @@ import {
   calTotalIncomeDashboard,
   calTotalStudentsDashboard,
   dashBoardChartData,
+  formatDataForPieChart,
 } from "@/lib/utilityFunctions";
 import PieChartComponent from "./PieChartComponent";
 
@@ -15,9 +16,10 @@ export default function DashboardComponent({
   allDetails: DashBoardDataType[];
 }) {
   const chartData = dashBoardChartData(allDetails);
+  const pieChartData = formatDataForPieChart(allDetails);
 
   return (
-    <div className=" text-white p-6 vertical-center">
+    <div className=" text-white p-6 lg:vertical-center">
       <div className="mx-auto flex-col">
         <div className="flex mb-8">
           <div>
@@ -48,9 +50,9 @@ export default function DashboardComponent({
             color="text-yellow-500"
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-5">
           <DashChart chartData={chartData} />
-          <PieChartComponent />
+          <PieChartComponent pieChartData={pieChartData} />
         </div>
       </div>
     </div>

@@ -135,20 +135,6 @@ export function calTotalIncomeDashboard(allDetails: DashBoardDataType[]) {
   );
 }
 
-// type ChartDataType = {
-//   date: string;
-//   courses_sold: number;
-// }[]
-
-// type DashBoardDataType = {
-//   id: string;
-//   enrolledStudents: {
-//       amount: number;
-//       created_at: string;
-//       courseId: string;
-//   }[];
-// }
-
 export function formatUnixTimestamp(unixTimestamp: number) {
   const date = new Date(unixTimestamp * 1000); // timestamp is in seconds
   const day = String(date.getDate()).padStart(2, "0");
@@ -169,7 +155,6 @@ const generateEmptyChartData = () => {
     });
   }
 
-  console.log("Created array", arr);
   return arr;
 };
 
@@ -193,6 +178,40 @@ export function dashBoardChartData(allDetails: DashBoardDataType[]) {
     }
   }
 
-  console.log("Final created Array", emptyArr);
   return emptyArr;
+}
+
+// type DashBoardDataType = {
+//   id: string;
+//   title: string;
+//   enrolledStudents: {
+//       amount: number;
+//       created_at: string;
+//       courseId: string;
+//   }[];
+// }
+
+// type PieChartDataType = {
+//   course_name: string;
+//   totalIncome: string;
+// }[];
+
+export function formatDataForPieChart(allDetails: DashBoardDataType[]) {
+  const finalArray = [];
+
+  for (let i = 0; i < allDetails.length; i++) {
+    const element = allDetails[i];
+
+    const incomePerCourse = element.enrolledStudents.reduce(
+      (accumulator, currentvalue) => (accumulator += currentvalue.amount),
+      0
+    );
+
+    finalArray.push({
+      course_name: element.title,
+      totalIncome: incomePerCourse / 100,
+    });
+  }
+
+  return finalArray;
 }

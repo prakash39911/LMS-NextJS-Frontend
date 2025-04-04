@@ -36,17 +36,12 @@ export default function RegisterCard() {
   });
 
   const onActualSubmit = async (data: registerUserSchemaType) => {
-    console.log(data);
-
-    const result = await fetch(`${API_END_POINT}user/register`, {
+    await fetch(`${API_END_POINT}user/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
 
-    const finalData = await result.json();
-
-    console.log("Api Call Result", finalData);
     reset();
   };
 
