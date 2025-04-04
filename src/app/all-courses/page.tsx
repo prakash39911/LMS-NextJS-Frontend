@@ -29,7 +29,7 @@ export default async function AllCourses({
     return (
       <div>
         <div className="relative">
-          <div className="flex flex-col gap-6 flex-wrap ml-6 mt-5">
+          <div className="flex flex-col items-center md:items-start gap-6 flex-wrap mt-5 md:ml-6">
             <div className="mx-auto text-4xl bg-clip-text font-bold text-transparent bg-gradient-to-r from-blue-500 to-purple-700">
               All Courses
             </div>

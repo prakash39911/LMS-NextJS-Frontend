@@ -48,14 +48,14 @@ export default function HomePage() {
               </p>
               <div className="flex justify-center space-x-4">
                 <button
-                  className="px-8 py-4 bg-blue-600 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center"
+                  className="px-4 py-3 bg-blue-600 md:px-8 md:py-4 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center"
                   onClick={handleClick}
                 >
                   {userId ? "Go To All Courses" : "Get Started"}
                   <ChevronRight className="ml-2" />
                 </button>
                 <button
-                  className="px-8 py-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-all transform hover:scale-105"
+                  className="px-4 py-3 md:px-8 md:py-4 bg-gray-700 rounded-lg hover:bg-gray-600 transition-all transform hover:scale-105"
                   onClick={() =>
                     window.scrollTo({
                       top: document.body.scrollHeight,

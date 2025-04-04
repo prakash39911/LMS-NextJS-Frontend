@@ -25,7 +25,9 @@ export default function FloatingFilter() {
             size={20}
             className="group-hover:rotate-180 transition-transform duration-300"
           />
-          <span className="font-medium text-sm tracking-wide">Filter</span>
+          <span className="font-medium text-sm tracking-wide hidden md:block">
+            Filter
+          </span>
         </div>
       </button>
 
