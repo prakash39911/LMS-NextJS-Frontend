@@ -60,6 +60,7 @@ type courseDetailPageType = {
 type GetAllCoursesParams = {
   ratings: string;
   priceRange: string;
+  search: string;
 };
 
 type getFilterPresetDataType = {

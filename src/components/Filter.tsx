@@ -11,6 +11,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useGetFilterPresetApi } from "@/hooks/useGetFilterPresetApi";
 import { areObjectsEqual } from "@/lib/utilityFunctions";
+import { SearchField } from "./SeachField";
 
 export type FilterStateType = {
   selectedRating: string[];
@@ -34,12 +35,23 @@ const Filter = () => {
     selectedRating: [],
     priceRange: [],
   });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
+
   const [inputNameVisible, setInputNameVisible] = useState(false);
 
   const { getToken } = useAuth();
   const router = useRouter();
   const { data, refetch } = useGetFilterPresetApi();
   const fetchedPresetData = data as getFilterPresetDataType;
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   const setSelectedRating = (selectedRating: string[]) => {
     setFilterState((prevState) => ({
@@ -121,8 +133,20 @@ const Filter = () => {
       queryParams.delete("priceRange");
     }
 
+    if (debouncedQuery.trim().length > 0) {
+      queryParams.set("search", debouncedQuery);
+    } else {
+      queryParams.delete("search");
+    }
+
     router.replace(`?${queryParams.toString()}`, { scroll: false });
-  }, [filterState.selectedRating, router, filterState.priceRange]);
+  }, [
+    filterState.selectedRating,
+    router,
+    filterState.priceRange,
+    searchQuery,
+    debouncedQuery,
+  ]);
 
   useEffect(() => {
     const isDefault =
@@ -145,6 +169,7 @@ const Filter = () => {
     setIsPresetApplied(false);
     setCurrentPresetName(null);
     setCurrentSelectedPresetId("");
+    setSearchQuery("");
   };
 
   return (
@@ -157,6 +182,12 @@ const Filter = () => {
         >
           Reset
         </Button>
+      </div>
+      <div>
+        <SearchField
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
       </div>
       <div className="flex flex-col gap-2 border border-gray-700 p-8">
         <span className="text-xl font-bold">Select Saved Filter</span>

@@ -25,7 +25,7 @@ export default function CourseCard({
     >
       <div className="relative group">
         <CldImage
-          src={course.main_image}
+          src={course?.main_image}
           height={300}
           width={300}
           alt="course image"
@@ -66,7 +66,7 @@ export default function CourseCard({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="text-2xl font-bold text-white">
-                ₹{course.price.toLocaleString()}
+                ₹{course?.price?.toLocaleString()}
               </div>
               {isOwner && (
                 <div className="flex items-center gap-2 bg-gray-700/50 py-1.5 px-3 rounded-full">

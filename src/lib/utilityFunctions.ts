@@ -14,7 +14,7 @@ export function makeid() {
 }
 
 export function CalRating(rating: { value: number }[]) {
-  const noOfRating = rating.length;
+  const noOfRating = rating?.length;
   let ratings = 0;
   for (let i = 0; i < noOfRating; i++) {
     ratings += rating[i].value;

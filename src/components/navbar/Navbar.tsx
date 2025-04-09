@@ -8,8 +8,6 @@ import HomeButtonComponent from "../HomeButtonComponent";
 export default async function Navbar() {
   const { userId } = await auth();
 
-  // const user = await currentUser();
-
   return (
     <div className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-transparent border-b border-gray-700">
       <div className="h-14 text-gray-300 flex w-full p-2 justify-between items-center pl-8">
