@@ -21,28 +21,20 @@ export const SearchField = ({ searchQuery, setSearchQuery }: Props) => {
   };
 
   return (
-    <div className="relative w-full mx-auto">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+    <div className="w-full max-w-3xl mx-auto">
+      <div className="relative group">
+        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+          <Search className="h-5 w-5 text-gray-400 group-hover:text-indigo-500 transition-colors duration-200" />
+        </div>
         <input
           type="text"
-          placeholder="Search"
           value={searchQuery}
-          className={`
-            w-full
-            py-2
-            pl-11
-            pr-4
-            bg-gray-900
-            border
-            border-gray-700
-            rounded-lg
-            text-gray-100
-            placeholder-gray-400
-            outline-none
-            focus:border-blue-500
-          `}
           onChange={(e) => handleOnChange(e)}
+          placeholder="Search with Elastic Search..."
+          className="w-full pl-12 pr-4 py-3 bg-gray-900/50 backdrop-blur-xl text-white placeholder-gray-400 
+                   rounded-2xl border border-gray-700/50 focus:border-indigo-500 focus:ring-2 
+                   focus:ring-indigo-500/20 outline-none transition-all duration-200
+                   hover:border-gray-600/50 hover:bg-gray-900/60"
         />
       </div>
     </div>

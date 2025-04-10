@@ -173,7 +173,7 @@ const Filter = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2 overflow-y-auto">
       <div>
         <Button
           variant="ghost"
