@@ -73,6 +73,24 @@ export default function CoursePageComponent({
 
   const isUserHasGivenRating = ratingArray.length > 0 ? true : false;
 
+  const createCourseProgress = async () => {
+    const token = await getToken();
+
+    try {
+      await fetch(
+        `${API_END_POINT}api/course/createCourseProgress/${course.id}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error while creating course progress", error);
+    }
+  };
+
   const handleClick = async (data: { amount: string }) => {
     try {
       if (!userId) {
@@ -140,7 +158,16 @@ export default function CoursePageComponent({
 
             if (finalResult.status) {
               toast.success("Payment Received and Verified Successfully");
-              router.replace(`/payment-status/${course.id}`);
+              createCourseProgress()
+                .then(() => {
+                  router.replace(`/payment-status/${course.id}`);
+                })
+                .catch((error) => {
+                  console.error("Course progress creation Failed", error);
+                  toast.error(
+                    "Failed to initialize course, please contact support"
+                  );
+                });
             } else {
               toast.error("Payment verification failed");
             }

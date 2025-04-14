@@ -74,7 +74,12 @@ export function calSectionsDurationsEtc(section: section) {
 
   const totalDurationInMinutesOrHours = secondsToMinutesOrHour(totalDuration);
 
-  return { noOfSections, noOfVideoSections, totalDurationInMinutesOrHours };
+  return {
+    noOfSections,
+    noOfVideoSections,
+    totalDurationInMinutesOrHours,
+    totalDuration,
+  };
 }
 
 export function secondsToMinuteForEachVideo(totalSeconds: number) {

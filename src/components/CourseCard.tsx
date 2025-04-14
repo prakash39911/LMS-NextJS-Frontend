@@ -6,6 +6,7 @@ import { CalRating } from "@/lib/utilityFunctions";
 import { useRouter } from "next/navigation";
 import { CldImage } from "next-cloudinary";
 import { ArrowRight, Users } from "lucide-react";
+import { useAuth } from "@clerk/nextjs";
 
 export default function CourseCard({
   course,
@@ -16,8 +17,19 @@ export default function CourseCard({
   ispurchasedCourse?: boolean;
   isOwner?: boolean;
 }) {
+  const { userId } = useAuth();
   const router = useRouter();
   const { ratings } = CalRating(course.rating);
+  let percentage: any[] = [];
+
+  if (ispurchasedCourse) {
+    percentage = course.enrolledStudents.map((eachObj) => {
+      if (eachObj.studentId === userId) {
+        return eachObj.courseProgress.completionPercentage;
+      }
+    });
+  }
+
   return (
     <div
       className="w-80 md:w-96 bg-gray-800 rounded-xl overflow-hidden transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/40 hover:cursor-pointer"
@@ -45,11 +57,29 @@ export default function CourseCard({
         {ispurchasedCourse ? (
           <div className="space-y-4">
             <div className="w-full bg-gray-700 rounded-full h-2">
-              <div className="w-[45%] h-full bg-purple-500 rounded-full" />
+              <div
+                className="h-full bg-purple-500 rounded-full transition-all duration-1000"
+                style={{
+                  width: "0%", // Start at 0%
+                  animation: "growProgressBar 1.5s ease-out forwards",
+                }}
+              />
             </div>
+            <style jsx>{`
+              @keyframes growProgressBar {
+                0% {
+                  width: 0%;
+                }
+                100% {
+                  width: ${percentage[0]}%;
+                }
+              }
+            `}</style>
             <div className="flex justify-between text-sm">
               <span className="text-gray-400">Progress</span>
-              <span className="text-purple-400 font-medium">45% Complete</span>
+              <span className="text-purple-400 font-medium">
+                {percentage[0]}% Complete
+              </span>
             </div>
             <button
               className="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700 text-white py-2.5 px-4 rounded-lg transition-colors duration-200"

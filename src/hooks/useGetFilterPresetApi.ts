@@ -3,15 +3,21 @@ import { useCallback, useEffect, useState } from "react";
 
 export const useGetFilterPresetApi = () => {
   const [data, setData] = useState<null | any>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  const { getToken } = useAuth();
+  const { getToken, isLoaded: isAuthLoaded, isSignedIn } = useAuth();
 
   const fetchData = useCallback(async () => {
+    if (!isAuthLoaded || !isSignedIn) {
+      return;
+    }
+
     setLoading(true);
+    setError(null);
+
     try {
       const token = await getToken();
 
@@ -25,10 +31,6 @@ export const useGetFilterPresetApi = () => {
         }
       );
 
-      if (!result.ok) {
-        throw new Error(`Error while fetching Data`);
-      }
-
       const finalData = await result.json();
       const final = finalData?.data;
       setData(final);
@@ -38,11 +40,15 @@ export const useGetFilterPresetApi = () => {
     } finally {
       setLoading(false);
     }
-  }, [getToken, API_END_POINT]);
+  }, [getToken, API_END_POINT, isAuthLoaded, isSignedIn]);
 
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    if (isAuthLoaded && isSignedIn) {
+      fetchData();
+    } else if (isAuthLoaded && !isSignedIn) {
+      setLoading(false);
+    }
+  }, [fetchData, isAuthLoaded, isSignedIn]);
 
   return { data, loading, error, refetch: fetchData };
 };

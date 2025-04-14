@@ -44,7 +44,7 @@ export default async function page({
 
     return (
       <div className="w-full vertical-center">
-        <VideoPlayerComponent course={course} />
+        <VideoPlayerComponent course={course} isTeacher={isTeacher} />
       </div>
     );
   } catch (error) {

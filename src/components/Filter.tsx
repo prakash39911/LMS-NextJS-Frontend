@@ -40,10 +40,13 @@ const Filter = () => {
 
   const [inputNameVisible, setInputNameVisible] = useState(false);
 
-  const { getToken } = useAuth();
+  const { getToken, isLoaded: isAuthLoaded } = useAuth();
   const router = useRouter();
   const { data, refetch } = useGetFilterPresetApi();
-  const fetchedPresetData = data as getFilterPresetDataType;
+
+  const fetchedPresetData: getFilterPresetDataType = data || {
+    SavedFilterData: [],
+  };
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -52,6 +55,12 @@ const Filter = () => {
 
     return () => clearTimeout(handler);
   }, [searchQuery]);
+
+  useEffect(() => {
+    if (isAuthLoaded) {
+      refetch();
+    }
+  }, [isAuthLoaded, refetch]);
 
   const setSelectedRating = (selectedRating: string[]) => {
     setFilterState((prevState) => ({

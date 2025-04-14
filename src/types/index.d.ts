@@ -30,7 +30,14 @@ type courseType = {
       video_thumbnailUrl: string;
     }[];
   }[];
-  enrolledStudents: { id: string }[];
+  enrolledStudents: {
+    id: string;
+    studentId: string;
+    courseProgress: {
+      completionPercentage: number;
+      isCompleted: boolean;
+    };
+  }[];
 };
 
 type courseDetailPageType = {
@@ -90,4 +97,21 @@ type ChartDataType = {
 type PieChartDataType = {
   course_name: string;
   totalIncome: number;
+};
+
+type ProgressData = {
+  courseProgress: {
+    courseId: string;
+    completionPercentage: number;
+    isCompleted: boolean;
+    sectionProgress: {
+      sectionId: string;
+      videoProgress: {
+        videoSectionId: string;
+        watchedSeconds: number;
+        completionPercentage: number;
+        isCompleted: boolean;
+      }[];
+    }[];
+  } | null;
 };
