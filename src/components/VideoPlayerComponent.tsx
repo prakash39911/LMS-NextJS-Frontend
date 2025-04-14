@@ -24,6 +24,15 @@ export default function VideoPlayerComponent({
 
   const { data: apiData } = useGetCourseProgressApi(isTeacher);
 
+  const progressDataArray = apiData?.data as ProgressData[];
+  const progressDataForThiscourse = progressDataArray
+    ?.map((eachobj) => {
+      if (eachobj.courseProgress?.courseId === course.id) {
+        return eachobj;
+      }
+    })
+    .filter((item) => item !== undefined);
+
   const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const videoPlayerRef = useRef<any>(null);
@@ -97,7 +106,10 @@ export default function VideoPlayerComponent({
           isCollapsed={isCollapsed}
           setisCollapsed={setisCollapsed}
           course={course}
-          progressData={apiData ? apiData.data : null}
+          progressData={
+            progressDataForThiscourse ? progressDataForThiscourse[0] : null
+          }
+          isTeacher={isTeacher}
         />
       </div>
       <div

@@ -1,7 +1,13 @@
 "use client";
 
 import clsx from "clsx";
-import { ChevronRight, ChevronLeft, Video, Play } from "lucide-react";
+import {
+  ChevronRight,
+  ChevronLeft,
+  Video,
+  Play,
+  CheckCircle,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 interface sideBarProps {
@@ -10,7 +16,8 @@ interface sideBarProps {
   isCollapsed: boolean;
   setisCollapsed: any;
   course: courseDetailPageType;
-  progressData: ProgressData[];
+  progressData: ProgressData | null;
+  isTeacher: boolean;
 }
 
 export default function VideoPlayerSideBar({
@@ -20,14 +27,11 @@ export default function VideoPlayerSideBar({
   setisCollapsed,
   course,
   progressData,
+  isTeacher,
 }: sideBarProps) {
   const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  const currentProgressData = progressData?.map((eachCourse) => {
-    if (eachCourse.courseProgress?.courseId === course.id) {
-      return eachCourse.courseProgress;
-    }
-  })[0];
+  const courseProgressData = progressData?.courseProgress;
 
   const handleVideoClick = async (videoSectionId: string) => {
     const result = await fetch(
@@ -64,8 +68,20 @@ export default function VideoPlayerSideBar({
         {isCollapsed ? (
           ""
         ) : (
-          <div className="mt-3 ml-2 text-cyan-500 font-bold md:text-xl">
-            {currentProgressData?.completionPercentage}% Completed
+          <div className="mt-3 ml-2 text-cyan-400 font-bold md:text-xl">
+            {isTeacher ? (
+              ""
+            ) : (
+              <div>
+                {courseProgressData?.completionPercentage !== 0 ? (
+                  <div>
+                    {courseProgressData?.completionPercentage}% Completed
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            )}
           </div>
         )}
 
@@ -105,44 +121,23 @@ export default function VideoPlayerSideBar({
               <div>
                 {eachSection.videoSection.map((eachVideo) => {
                   const currentSection =
-                    currentProgressData?.sectionProgress.map(
-                      (eachSectionProgressData) => {
-                        if (
-                          eachSectionProgressData.sectionId === eachSection.id
-                        ) {
-                          return eachSectionProgressData;
-                        }
-                      }
+                    courseProgressData?.sectionProgress?.find(
+                      (progressSection) =>
+                        progressSection.sectionId === eachSection.id
                     );
 
-                  const videoData = currentSection?.map((eachVideoProgress) =>
-                    eachVideoProgress?.videoProgress.map((eachObj) => {
-                      if (eachObj.videoSectionId === eachVideo.id) {
-                        return eachObj;
-                      }
-                    })
-                  )[index];
-
-                  const progressPercentage: number[] = videoData
-                    ? videoData
-                        .filter(
-                          (
-                            item
-                          ): item is {
-                            videoSectionId: string;
-                            watchedSeconds: number;
-                            completionPercentage: number;
-                            isCompleted: boolean;
-                          } => item !== undefined
-                        )
-                        .map((item) => item.completionPercentage)
-                    : [];
+                  const eachVideoProgressData =
+                    currentSection?.videoProgress?.find(
+                      (videoProgress) =>
+                        videoProgress.videoSectionId === eachVideo.id
+                    );
 
                   return (
                     <div
                       key={eachVideo.id}
                       className={clsx(
-                        "mb-1 bg-gray-800 mt-2 md:mt-4 p-1 md:p-2 rounded-lg h-auto"
+                        "mb-1 bg-gray-800 mt-2 md:mt-4 p-1 md:p-2 rounded-lg h-auto",
+                        eachVideoProgressData?.isCompleted ? "h-[43px]" : ""
                       )}
                       onClick={() => handleVideoClick(eachVideo.id)}
                     >
@@ -163,28 +158,43 @@ export default function VideoPlayerSideBar({
                       </div>
 
                       {/* Progress Line with Circle Indicator */}
-                      <div className="mt-2 mb-1 relative">
-                        <div className="w-full bg-gray-700 rounded-full h-0.5">
-                          <div
-                            className="h-full bg-cyan-500 rounded-full transition-all duration-1000"
-                            style={{
-                              width: `${
-                                progressPercentage.length > 0
-                                  ? progressPercentage
-                                  : 0
-                              }%`,
-                            }}
-                          />
+                      {eachVideoProgressData?.isCompleted ? (
+                        <div className="text-cyan-400 relative left-[230px] bottom-[22px]">
+                          <CheckCircle size={17} />
                         </div>
-                        {/* Circle Indicator */}
-                        <div
-                          className="absolute h-2.5 w-2.5 bg-cyan-400 rounded-full top-1/2 transform -translate-y-1/2 transition-all duration-1000"
-                          style={{
-                            left: `calc(${progressPercentage}% - 7px)`, // Adjust circle position
-                            boxShadow: "0 0 6px 1px rgba(34, 211, 238, 0.7)",
-                          }}
-                        />
-                      </div>
+                      ) : (
+                        <div>
+                          {isTeacher ? (
+                            ""
+                          ) : (
+                            <div>
+                              {eachVideoProgressData?.isCompleted ? (
+                                ""
+                              ) : (
+                                <div className="mt-2 mb-1 relative">
+                                  <div className="w-full bg-gray-700 rounded-full h-0.5">
+                                    <div
+                                      className="h-full bg-cyan-500 rounded-full transition-all duration-1000"
+                                      style={{
+                                        width: `${eachVideoProgressData?.completionPercentage}%`,
+                                      }}
+                                    />
+                                  </div>
+                                  {/* Circle Indicator */}
+                                  <div
+                                    className="absolute h-2.5 w-2.5 bg-cyan-400 rounded-full top-1/2 transform -translate-y-1/2 transition-all duration-1000"
+                                    style={{
+                                      left: `calc(${eachVideoProgressData?.completionPercentage}% - 7px)`, // Adjust circle position
+                                      boxShadow:
+                                        "0 0 6px 1px rgba(34, 211, 238, 0.7)",
+                                    }}
+                                  />
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   );
                 })}

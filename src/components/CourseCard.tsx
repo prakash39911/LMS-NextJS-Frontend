@@ -60,21 +60,10 @@ export default function CourseCard({
               <div
                 className="h-full bg-purple-500 rounded-full transition-all duration-1000"
                 style={{
-                  width: "0%", // Start at 0%
-                  animation: "growProgressBar 1.5s ease-out forwards",
+                  width: `${percentage[0] || 0}%`,
                 }}
               />
             </div>
-            <style jsx>{`
-              @keyframes growProgressBar {
-                0% {
-                  width: 0%;
-                }
-                100% {
-                  width: ${percentage[0]}%;
-                }
-              }
-            `}</style>
             <div className="flex justify-between text-sm">
               <span className="text-gray-400">Progress</span>
               <span className="text-purple-400 font-medium">
