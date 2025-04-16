@@ -51,7 +51,7 @@ const Filter = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(searchQuery);
-    }, 500);
+    }, 1000);
 
     return () => clearTimeout(handler);
   }, [searchQuery]);
@@ -179,6 +179,7 @@ const Filter = () => {
     setCurrentPresetName(null);
     setCurrentSelectedPresetId("");
     setSearchQuery("");
+    setDebouncedQuery("");
   };
 
   return (
