@@ -142,8 +142,8 @@ const Filter = () => {
       queryParams.delete("priceRange");
     }
 
-    if (debouncedQuery.trim().length > 0) {
-      queryParams.set("search", debouncedQuery);
+    if (debouncedQuery && debouncedQuery.trim().length > 0) {
+      queryParams.set("search", debouncedQuery.trim());
     } else {
       queryParams.delete("search");
     }
