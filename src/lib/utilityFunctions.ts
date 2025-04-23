@@ -41,6 +41,8 @@ export function secondsToMinutesOrHour(totalSeconds: number) {
     const hour = Math.floor(minutes / 60);
     const hourMinute = minutes % 60;
     return `${hour}:${hourMinute.toString().padStart(2, "0")} hour`;
+  } else if (roundOffSeconds < 60) {
+    return `${roundOffSeconds} seconds`;
   } else {
     const seconds = roundOffSeconds % 60;
     return `${minutes}:${seconds.toString().padStart(2, "0")} minutes`;

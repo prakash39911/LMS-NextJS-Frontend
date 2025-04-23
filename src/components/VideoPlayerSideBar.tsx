@@ -137,7 +137,7 @@ export default function VideoPlayerSideBar({
                       key={eachVideo.id}
                       className={clsx(
                         "mb-1 bg-gray-800 mt-2 md:mt-4 p-1 md:p-2 rounded-lg h-auto",
-                        eachVideoProgressData?.isCompleted ? "h-[43px]" : ""
+                        eachVideoProgressData?.isCompleted ? "h-[42px]" : ""
                       )}
                       onClick={() => handleVideoClick(eachVideo.id)}
                     >
@@ -160,7 +160,7 @@ export default function VideoPlayerSideBar({
                       {/* Progress Line with Circle Indicator */}
                       {eachVideoProgressData?.isCompleted ? (
                         <div className="text-cyan-400 relative left-[230px] bottom-[22px]">
-                          <CheckCircle size={17} />
+                          <CheckCircle size={18} />
                         </div>
                       ) : (
                         <div>

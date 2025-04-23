@@ -16,10 +16,10 @@ export default function ImageUploadButton({ onAssetUpload, btnName }: Props) {
 
   return (
     <CldUploadButton
-      options={{ maxFiles: 1, folder: "LMS" }}
+      options={{ maxFiles: 1, folder: "LMS/Images/development" }}
       onSuccess={onAssetUpload}
       signatureEndpoint={`${API_END_POINT}api/sign-video`}
-      uploadPreset="ml_default"
+      uploadPreset="Image_Upload"
       className={`flex items-center gap-2 border-2 border-gray-400 text-gray-300 
         rounded-lg py-1.5 px-4 hover:bg-secondary/10`}
     >

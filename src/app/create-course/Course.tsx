@@ -12,9 +12,10 @@ import { useAuth, useUser } from "@clerk/nextjs";
 import { X, Image } from "lucide-react";
 import { CldImage, CloudinaryUploadWidgetResults } from "next-cloudinary";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import ImageUploadButton from "@/components/ImageUploadButton";
+import LoadingComponent from "@/components/LoadingComponent";
 
 export default function Course({ name }: { name: string }) {
   return (
@@ -28,6 +29,7 @@ function CreateCourseForm({ name }: { name: string }) {
   const { user } = useUser();
   const router = useRouter();
   const { getToken } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const fullName = user?.fullName || name;
 
@@ -55,6 +57,8 @@ function CreateCourseForm({ name }: { name: string }) {
   }, [reset]);
 
   const onActualImageUpload = (result: CloudinaryUploadWidgetResults) => {
+    console.log("Cloudinary image upload Result", result);
+
     if (result.info && typeof result.info === "object") {
       addImageToStore({
         publicId: result.info.public_id,
@@ -70,11 +74,12 @@ function CreateCourseForm({ name }: { name: string }) {
   // console.log("Error", errors);
 
   const actualSubmit = async (data: any) => {
+    setIsLoading(true);
     try {
       const finalObjToBeSubmitted = { ...data, ownerName: fullName };
       const token = await getToken();
 
-      await fetch(`${API_END_POINT}api/course/create`, {
+      const result = await fetch(`${API_END_POINT}api/course/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,12 +88,18 @@ function CreateCourseForm({ name }: { name: string }) {
         body: JSON.stringify(finalObjToBeSubmitted),
       });
 
+      const finalData = await result.json();
+
+      console.log("Created Course", finalData?.course);
+
       reset();
       router.push("/all-courses");
       toast("Course Saved Successfully");
     } catch (error) {
       console.error(error);
       toast("Error While saving Course");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -183,9 +194,17 @@ function CreateCourseForm({ name }: { name: string }) {
         <div className="flex flex-row gap-5 justify-center">
           <Button
             type="submit"
+            disabled={isLoading}
             className="font-semibold text-gray-300 bg-red-900"
           >
-            Save this Course
+            {isLoading ? (
+              <div className="flex gap-4 items-center">
+                <LoadingComponent className="text-white" />
+                <div className="text-xl">Saving...</div>
+              </div>
+            ) : (
+              "Save this Course"
+            )}
           </Button>
         </div>
       </form>
@@ -332,7 +351,7 @@ const ManageVideoSection = ({
 
     if (result.info && typeof result.info === "object") {
       addVideoToStore({
-        url: result.info.playback_url,
+        url: result.info.secure_url,
         public_id: result.info.public_id,
         thumbnailUrl: result.info.thumbnail_url,
         fileName: result.info.original_filename,
@@ -342,7 +361,7 @@ const ManageVideoSection = ({
       });
       setValue(
         `section.${sectionIndex}.videoSection.${videoIndex}.video_url`,
-        result.info.playback_url as string
+        result.info.secure_url as string
       );
       setValue(
         `section.${sectionIndex}.videoSection.${videoIndex}.video_public_id`,

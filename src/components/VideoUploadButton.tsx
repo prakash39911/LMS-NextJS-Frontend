@@ -18,12 +18,12 @@ export default function VideoUploadButton({ onAssetUpload, btnName }: Props) {
     <CldUploadButton
       options={{
         maxFiles: 1,
-        folder: "LMS",
+        folder: "LMS/Videos/development",
         resourceType: "video",
       }}
       onSuccess={onAssetUpload}
       signatureEndpoint={`${API_END_POINT}api/sign-video`}
-      uploadPreset="ml_default"
+      uploadPreset="Video_Upload"
       className={`flex items-center gap-2 border-2 border-gray-400 text-gray-300 
         rounded-lg py-1.5 px-4 hover:bg-secondary/10`}
     >
