@@ -7,6 +7,8 @@ import clsx from "clsx";
 import VideoPlayerSideBar from "./VideoPlayerSideBar";
 import { useAuth } from "@clerk/nextjs";
 import { useGetCourseProgressApi } from "@/hooks/useGetCourseProgressApi";
+import TranscriptionSidebar from "./TranscriptionSidebar";
+import { useGetTranscriptionSummaryHook } from "@/hooks/useTranscriptionHook";
 
 export default function VideoPlayerComponent({
   course,
@@ -16,13 +18,16 @@ export default function VideoPlayerComponent({
   isTeacher: boolean;
 }) {
   const { getToken } = useAuth();
-  const [isCollapsed, setisCollapsed] = useState(false);
+  const [isCollapsed, setisCollapsed] = useState(true);
   const [currentVideo, setCurrentVideo] = useState({
     id: course.section[0].videoSection[0].id,
     video_public_id: course.section[0].videoSection[0].video_public_id,
   });
 
   const { data: apiData } = useGetCourseProgressApi(isTeacher);
+  const { data: summaryData } = useGetTranscriptionSummaryHook(
+    currentVideo?.video_public_id
+  );
 
   const progressDataArray = apiData?.data as ProgressData[];
   const progressDataForThiscourse = progressDataArray
@@ -98,7 +103,7 @@ export default function VideoPlayerComponent({
   }, [currentVideo.id, getToken, API_END_POINT, course.id, apiData]); // Re-initialize when video changes
 
   return (
-    <div className="bg-gray-900 vertical-center w-full flex">
+    <div className="bg-gray-900 vertical-center w-full flex relative">
       <div className="border-r-2 border-gray-800">
         <VideoPlayerSideBar
           setCurrentVideo={setCurrentVideo}
@@ -128,6 +133,12 @@ export default function VideoPlayerComponent({
             playerRef={videoPlayerRef}
           />
         </div>
+      </div>
+      <div>
+        <TranscriptionSidebar
+          transcriptionData={summaryData}
+          videoPublicId={currentVideo?.video_public_id}
+        />
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import ButtonComponent from "@/components/ButtonComponent";
+import TranscriptionSidebar from "@/components/TranscriptionSidebar";
 import VideoPlayerComponent from "@/components/VideoPlayerComponent";
 import { auth } from "@clerk/nextjs/server";
 import React from "react";
