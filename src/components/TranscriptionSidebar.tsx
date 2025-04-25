@@ -24,12 +24,9 @@ export default function TranscriptionSidebar({
     setSummary(transcriptionData);
   }, [transcriptionData]);
 
-  console.log("Transcription Data in SideBar Component", transcriptionData);
-
   const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
-  const handleClick = async () => {
-    setIsLoading(true);
+  const actualAPICallToGenerateSummary = async () => {
     try {
       const token = await getToken();
       const abortController = new AbortController();
@@ -81,8 +78,64 @@ export default function TranscriptionSidebar({
       if (error.name !== "AbortError") {
         console.error("Error while generating Lecture Summary", error);
       }
+    }
+  };
+
+  const handleRegenerate = async () => {
+    setIsLoading(true);
+    setSummary(null);
+    try {
+      await fetch(`${API_END_POINT}api/video/transcript/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ videoPublicId }),
+      });
+
+      await actualAPICallToGenerateSummary();
+    } catch (error) {
+      console.log("There is a error while re-generating Summary", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleGenerate = async () => {
+    setIsLoading(true);
+    try {
+      await actualAPICallToGenerateSummary();
+    } catch (error: any) {
+      console.log("Something went Wrong while making an API call", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const generatePdfClick = async () => {
+    try {
+      const generatedPdf = await fetch(
+        `${API_END_POINT}api/video/transcript/generatePdf`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ videoPublicId }),
+        }
+      );
+
+      const blob = await generatedPdf.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "summary.pdf";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Unable to Generate PDF", error);
     }
   };
 
@@ -128,6 +181,7 @@ export default function TranscriptionSidebar({
                   <div>
                     <Button
                       variant="outline"
+                      onClick={() => generatePdfClick()}
                       className="bg-transparent border-blue-500 hover:bg-blue-600 hover:text-gray-100"
                     >
                       Download pdf
@@ -137,14 +191,21 @@ export default function TranscriptionSidebar({
               )}
 
               {summary && (
-                <div className="border border-gray-700 h-[600px] text-gray-200 rounded-xl p-2 font-mono break-words overflow-y-auto">
+                <div className="border border-gray-700 h-[580px] text-gray-200 rounded-xl p-2 font-mono break-words overflow-y-auto">
                   <div dangerouslySetInnerHTML={{ __html: summary }} />
                 </div>
               )}
 
               <div>
                 {summary ? (
-                  ""
+                  <div className="flex justify-center">
+                    <div
+                      onClick={() => handleRegenerate()}
+                      className="border border-gray-800 px-6 py-3 text-xl bg-gradient-to-r from-blue-500 to-violet-700 rounded-lg cursor-pointer"
+                    >
+                      Generate Summary Again
+                    </div>
+                  </div>
                 ) : (
                   <div>
                     {isLoading ? (
@@ -154,7 +215,7 @@ export default function TranscriptionSidebar({
                     ) : (
                       <div className="flex justify-center">
                         <div
-                          onClick={() => handleClick()}
+                          onClick={() => handleGenerate()}
                           className="border border-gray-800 px-6 py-3 text-xl bg-gradient-to-r from-blue-500 to-violet-700 rounded-lg cursor-pointer"
                         >
                           Generate Summary Using AI
