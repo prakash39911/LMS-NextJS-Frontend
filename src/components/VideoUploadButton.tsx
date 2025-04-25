@@ -18,7 +18,7 @@ export default function VideoUploadButton({ onAssetUpload, btnName }: Props) {
     <CldUploadButton
       options={{
         maxFiles: 1,
-        folder: "LMS/Videos/development",
+        folder: "LMS/Videos/production",
         resourceType: "video",
       }}
       onSuccess={onAssetUpload}
