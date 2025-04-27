@@ -96,7 +96,7 @@ const Filter = () => {
     setIsPresetApplied(true);
   };
 
-  const handleCheckBoxChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleCheckBoxChange = (e: ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
 
     if (isChecked) setInputNameVisible(true);
@@ -228,9 +228,7 @@ const Filter = () => {
       </div>
       {!isPresetSaved &&
         !isDefaultFilter &&
-        (areObjectsEqual(currentSelectedPreset, filterState) ? (
-          ""
-        ) : (
+        !areObjectsEqual(currentSelectedPreset, filterState) && (
           <div>
             <div
               id="save-button"
@@ -239,8 +237,9 @@ const Filter = () => {
               <div className="flex gap-5 items-center">
                 <input
                   type="checkbox"
-                  className="w-5 h-5"
+                  className="w-5 h-5 z-10"
                   onChange={handleCheckBoxChange}
+                  style={{ pointerEvents: "auto" }} // Add this
                 />
 
                 <div className="font-semibold">
@@ -287,7 +286,7 @@ const Filter = () => {
               )}
             </div>
           </div>
-        ))}
+        )}
     </div>
   );
 };
