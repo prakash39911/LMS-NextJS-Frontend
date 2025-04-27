@@ -65,7 +65,7 @@ const Chat = ({ initialMessages = [] }: ChatProps) => {
   };
 
   return (
-    <div className="fixed bottom-8 right-8 z-50">
+    <div className="fixed bottom-4 right-4 md:bottom-8 md:left-8 z-40">
       <AnimatePresence mode="wait">
         {isOpen ? (
           <motion.div

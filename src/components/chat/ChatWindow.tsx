@@ -24,7 +24,7 @@ const ChatWindow = ({
   }, [messages]);
 
   return (
-    <div className="flex flex-col w-96 h-[550px] md:w-[400px] md:h-[500px] bg-gray-900 rounded-lg shadow-xl overflow-hidden border border-gray-700">
+    <div className="flex flex-col w-[381px] h-[550px] md:w-[400px] md:h-[500px] bg-gray-900 rounded-lg shadow-xl overflow-hidden border border-gray-700">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-gray-800 text-white">
         <h3 className="font-bold bg-gradient-to-r from-red-500 to-blue-500 text-transparent bg-clip-text text-xl">

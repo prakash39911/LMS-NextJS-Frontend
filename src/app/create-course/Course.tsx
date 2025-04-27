@@ -9,7 +9,7 @@ import {
 } from "@/hooks/useReactHookForm";
 import { useFormStore } from "@/store/CreateCourseStore";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { X, Image } from "lucide-react";
+import { X, Image, Plus, Upload, Video, ArrowRight } from "lucide-react";
 import { CldImage, CloudinaryUploadWidgetResults } from "next-cloudinary";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -47,7 +47,6 @@ function CreateCourseForm({ name }: { name: string }) {
   const {
     handleSubmit,
     register,
-    // watch,
     setValue,
     formState: { errors },
   } = useFormContextCreateCourse();
@@ -68,10 +67,6 @@ function CreateCourseForm({ name }: { name: string }) {
       setValue("main_image", result.info.public_id);
     }
   };
-
-  // const formData = watch();
-  // console.log("FormData", formData);
-  // console.log("Error", errors);
 
   const actualSubmit = async (data: any) => {
     setIsLoading(true);
@@ -104,84 +99,96 @@ function CreateCourseForm({ name }: { name: string }) {
   };
 
   return (
-    <div className="flex flex-col gap-2 items-center">
-      <div className="text-5xl font-bold text-transparent bg-gradient-to-r from-indigo-600 to-purple-700 bg-clip-text mb-2">
+    <div className="flex flex-col gap-2 items-center max-w-7xl mx-auto px-4">
+      <div className="text-5xl font-bold text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text mb-3">
         Create Course
       </div>
+
       <form
         onSubmit={handleSubmit(actualSubmit)}
-        className="flex flex-col gap-2 items-center"
+        className="flex flex-col gap-4 items-center w-full"
       >
-        <div className="flex flex-col gap-4 md:flex-row justify-between items-center w-[400px] md:w-[1200px] mb-1.5">
-          <div className="flex flex-col gap-3">
-            <div className="flex gap-3 items-center">
-              <input
-                type="text"
-                placeholder="Course title"
-                {...register("title")}
-                className="py-1.5 w-[350px] bg-slate-800 border border-gray-400 rounded-lg px-1 text-gray-200"
-              />
-              {errors.title && (
-                <div className="text-red-800">{errors.title.message}</div>
-              )}
-            </div>
-            <div className="flex gap-3 items-center">
-              <input
-                type="number"
-                placeholder="Price"
-                {...register("price", { valueAsNumber: true })}
-                className="py-1.5 w-[350px] bg-slate-800 border border-gray-400 rounded-lg px-1 text-gray-200"
-              />
-
-              {errors.price && (
-                <div className="text-red-800">Please enter valid number</div>
-              )}
-            </div>
-            <div className="flex flex-row justify-between items-center gap-5">
-              <div className="flex items-center gap-1.5">
-                <label className="text-gray-400">Image :</label>
-                <ImageUploadButton
-                  btnName="Upload Image"
-                  onAssetUpload={(result) => onActualImageUpload(result)}
-                />
-              </div>
+        <div className="w-full max-w-5xl bg-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-4 shadow-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
               <div>
-                {image.publicId && (
-                  <div className="flex flex-row gap-4 items-center">
-                    <span className="text-gray-400">
-                      <Image size={20} aria-label="Upload icon" />
-                    </span>
-                    <div className="hidden md:block">
-                      <CldImage
-                        src={image.publicId}
-                        alt="Image"
-                        width={55}
-                        height={55}
-                      />
-                    </div>
-
-                    <div className="text-blue-500 font-semibold">
-                      Upload Success!!
-                    </div>
-                    <div className="text-gray-300 overflow-x-hidden md:block hidden">
-                      <span>File:</span>
-                      <span>{image.fileName}</span>
-                    </div>
+                <label className="text-gray-300 text-sm font-medium mb-1 block">
+                  Course Title
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter an engaging title"
+                  {...register("title")}
+                  className="py-2 w-full bg-gray-800/80 border border-gray-600 rounded-lg px-4 text-gray-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200 shadow-inner"
+                />
+                {errors.title && (
+                  <div className="text-rose-500 text-sm mt-1">
+                    {errors.title.message}
                   </div>
                 )}
               </div>
-            </div>
-          </div>
 
-          <div className="flex flex-col gap-0.5">
-            <textarea
-              placeholder="Description"
-              {...register("description")}
-              className="py-1.5 w-[350px] bg-slate-800 border border-gray-400 rounded-lg px-1 text-gray-200"
-            />
-            {errors.description && (
-              <div className="text-red-800">{errors.description.message}</div>
-            )}
+              <div>
+                <label className="text-gray-300 text-sm font-medium mb-1 block">
+                  Price
+                </label>
+                <input
+                  type="number"
+                  placeholder="Set your course price"
+                  {...register("price", { valueAsNumber: true })}
+                  className="py-2 w-full bg-gray-800/80 border border-gray-600 rounded-lg px-4 text-gray-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200 shadow-inner"
+                />
+                {errors.price && (
+                  <div className="text-rose-500 text-sm mt-1">
+                    Please enter a valid price
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="text-gray-300 text-sm font-medium mb-3 block">
+                  Course Thumbnail
+                </label>
+                <div className="flex items-center gap-4">
+                  <ImageUploadButton
+                    btnName={"Upload Thumbnail"}
+                    onAssetUpload={(result) => onActualImageUpload(result)}
+                  />
+
+                  {image.publicId && (
+                    <div className="flex items-center gap-3 bg-gray-800/60 py-1 px-3 rounded-lg">
+                      <CldImage
+                        src={image.publicId}
+                        alt="Course thumbnail"
+                        width={40}
+                        height={40}
+                        className="rounded-md"
+                      />
+                      <span className="text-green-400 text-sm font-medium">
+                        Image uploaded
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-gray-300 text-sm font-medium mb-1 block">
+                Course Description
+              </label>
+              <textarea
+                placeholder="Describe what students will learn"
+                {...register("description")}
+                rows={7}
+                className="py-3 w-full bg-gray-800/80 border border-gray-600 rounded-lg px-4 text-gray-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200 shadow-inner resize-none"
+              />
+              {errors.description && (
+                <div className="text-rose-500 text-sm mt-1">
+                  {errors.description.message}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -191,22 +198,23 @@ function CreateCourseForm({ name }: { name: string }) {
           removeVideoFromState={removeVideoFromState}
         />
 
-        <div className="flex flex-row gap-5 justify-center">
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="font-semibold text-gray-300 bg-red-900"
-          >
-            {isLoading ? (
-              <div className="flex gap-4 items-center">
-                <LoadingComponent className="text-white" />
-                <div className="text-xl">Saving...</div>
-              </div>
-            ) : (
-              "Save this Course"
-            )}
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-700 hover:from-indigo-700 hover:to-purple-800 transition-all duration-200 py-3 px-8 text-lg rounded-lg shadow-lg shadow-indigo-700/20"
+        >
+          {isLoading ? (
+            <div className="flex gap-3 items-center">
+              <LoadingComponent className="text-white" />
+              <div>Creating Course...</div>
+            </div>
+          ) : (
+            <div className="flex items-center py-2 gap-2">
+              <span>Publish Course</span>
+              <ArrowRight size={18} />
+            </div>
+          )}
+        </Button>
       </form>
     </div>
   );
@@ -250,61 +258,62 @@ const ManageSection = ({
       ],
     });
   };
-  return (
-    <div className="flex flex-col gap-3">
-      {sectionFields.map((section, sectionIndex) => {
-        return (
-          <div
-            className="p-2 wd-[400px] md:w-[1200px] bg-gray-800 rounded-lg border border-gray-600 flex flex-col gap-2 pl-4"
-            key={section.id}
-          >
-            <div className="text-gray-400 flex justify-between border-b border-b-gray-800">
-              <div className="flex flex-row gap-1 items-center mb-1.5">
-                <div className="font-extrabold text-2xl">
-                  Section {sectionIndex + 1}:
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <input
-                    type="text"
-                    placeholder="Section name"
-                    {...register(`section.${sectionIndex}.sectionName`)}
-                    className="py-1 w-[200px] md:w-[350px] bg-slate-800 border border-gray-400 rounded-lg px-1 text-gray-200"
-                  />
-                  {errors.section?.[sectionIndex]?.sectionName && (
-                    <div className="text-red-800">
-                      {errors.section[sectionIndex]?.sectionName?.message}
-                    </div>
-                  )}
-                </div>
-              </div>
 
-              {sectionIndex > 0 && (
-                <div
-                  className="cursor-pointer"
-                  onClick={() => remove(sectionIndex)}
-                >
-                  <X />
+  return (
+    <div className="flex flex-col gap-5 w-full max-w-5xl">
+      {sectionFields.map((section, sectionIndex) => (
+        <div
+          className="bg-gray-900/70 backdrop-blur-sm rounded-xl border border-gray-700/50 p-4 shadow-lg"
+          key={section.id}
+        >
+          <div className="flex justify-between items-center border-b border-gray-700/70 pb-4 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="bg-indigo-600/20 flex gap-2 text-indigo-400 font-bold rounded-lg px-3 py-1">
+                <span>Section</span>
+                {sectionIndex + 1}
+              </div>
+              <input
+                type="text"
+                placeholder="Section name"
+                {...register(`section.${sectionIndex}.sectionName`)}
+                className="py-2 w-full max-w-md bg-gray-800/70 border border-gray-600 rounded-lg px-4 text-gray-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200"
+              />
+              {errors.section?.[sectionIndex]?.sectionName && (
+                <div className="text-rose-500 text-sm">
+                  {errors.section[sectionIndex]?.sectionName?.message}
                 </div>
               )}
             </div>
-            <ManageVideoSection
-              sectionIndex={sectionIndex}
-              videos={videos}
-              addVideoToStore={addVideoToStore}
-              removeVideoFromState={removeVideoFromState}
-            />
+
+            {sectionIndex > 0 && (
+              <Button
+                type="button"
+                onClick={() => remove(sectionIndex)}
+                variant="ghost"
+                className="text-gray-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors p-2 rounded-full"
+              >
+                <X size={20} />
+              </Button>
+            )}
           </div>
-        );
-      })}
-      <div className="flex justify-center">
-        <Button
-          type="button"
-          onClick={addSection}
-          className="font-semibold text-gray-300 bg-blue-900"
-        >
-          Add More Section
-        </Button>
-      </div>
+
+          <ManageVideoSection
+            sectionIndex={sectionIndex}
+            videos={videos}
+            addVideoToStore={addVideoToStore}
+            removeVideoFromState={removeVideoFromState}
+          />
+        </div>
+      ))}
+
+      <Button
+        type="button"
+        onClick={addSection}
+        className="mx-auto font-medium text-gray-200 bg-indigo-700/80 hover:bg-indigo-700 transition-colors flex items-center gap-2 py-2 px-4 rounded-lg shadow-md"
+      >
+        <Plus size={18} />
+        <span>Add New Section</span>
+      </Button>
     </div>
   );
 };
@@ -330,17 +339,6 @@ const ManageVideoSection = ({
     name: `section.${sectionIndex}.videoSection`,
     control,
   });
-
-  // const removeVideo = async (video_public_id: string) => {
-  //   console.log("remove video public ID", video_public_id);
-
-  //   await fetch("http://localhost:8000/api/deleteFromCloudinary/", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({ video_public_id }),
-  //   });
-  //   removeVideoFromState(video_public_id);
-  // };
 
   const onActualVideoUpload = async (
     result: CloudinaryUploadWidgetResults,
@@ -378,100 +376,93 @@ const ManageVideoSection = ({
       );
     }
   };
+
   return (
-    <div>
-      {fields.map((video, videoIndex) => {
-        return (
-          <div
-            key={video.id}
-            className="p-2 w-[380] md:w-[1100px] h-[115px] bg-gray-900 rounded-lg border border-gray-600 flex flex-col gap-2 pl-4"
-          >
-            <div className="text-gray-400 flex justify-between border-b border-b-gray-600">
-              <div className="flex flex-row gap-1 items-center mb-1.5">
-                <div className="text-xl font-bold">Video {videoIndex + 1}:</div>
-                <div className="flex items-center gap-1.5">
-                  <input
-                    type="text"
-                    placeholder="Video title"
-                    {...register(
-                      `section.${sectionIndex}.videoSection.${videoIndex}.video_title`
-                    )}
-                    className="py-1 w-[200px] md:w-[350px] bg-slate-800 border border-gray-400 rounded-lg px-1 text-gray-200"
-                  />
-                  {errors.section?.[sectionIndex]?.videoSection?.[videoIndex]
-                    ?.video_title && (
-                    <div className="text-red-800">
-                      {
-                        errors.section?.[sectionIndex]?.videoSection?.[
-                          videoIndex
-                        ]?.video_title.message
-                      }
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {videoIndex > 0 && (
-                <div
-                  className="cursor-pointer"
-                  onClick={() => {
-                    remove(videoIndex);
-                  }}
-                >
-                  <X />
-                </div>
-              )}
-            </div>
-
-            <div className="flex flex-row justify-between items-center">
-              <div className="flex items-center gap-1.5">
-                <label className="text-gray-400">Video File :</label>
-                <VideoUploadButton
-                  btnName="Upload Video"
-                  onAssetUpload={(result) =>
-                    onActualVideoUpload(result, sectionIndex, videoIndex)
-                  }
-                />
-              </div>
-
-              {videos.map(
-                (videoDetailsObject) =>
-                  videoDetailsObject.sectionIndex === sectionIndex &&
-                  videoDetailsObject.videoIndex === videoIndex && (
-                    <div key={videoDetailsObject.public_id}>
-                      <div className=" gap-3 flex items-center">
-                        <div className="text-blue-400 text-sm md:text-xl font-bold">
-                          Upload Success!
-                        </div>
-                        <div className="text-gray-300 hidden md:block">
-                          {" "}
-                          {videoDetailsObject.fileName}
-                        </div>
-                      </div>
-                    </div>
-                  )
-              )}
-            </div>
-          </div>
-        );
-      })}
-      <div className="flex justify-center">
-        <Button
-          type="button"
-          className="font-semibold text-gray-300"
-          onClick={() =>
-            append({
-              video_title: "",
-              video_public_id: "",
-              video_thumbnailUrl: "",
-              video_url: "",
-              video_duration: 0,
-            })
-          }
+    <div className="space-y-4">
+      {fields.map((video, videoIndex) => (
+        <div
+          key={video.id}
+          className="bg-gray-800/50 backdrop-blur-sm rounded-lg border border-gray-700/50 p-4"
         >
-          Add More Videos
-        </Button>
-      </div>
+          <div className="flex justify-between items-center border-b border-gray-700/50 pb-3 mb-3">
+            <div className="flex items-center gap-3">
+              <div className="text-gray-400 font-medium">{videoIndex + 1}</div>
+              <input
+                type="text"
+                placeholder="Video title"
+                {...register(
+                  `section.${sectionIndex}.videoSection.${videoIndex}.video_title`
+                )}
+                className="py-2 w-full max-w-md bg-gray-800 border border-gray-600 rounded-lg px-3 text-gray-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition duration-200"
+              />
+              {errors.section?.[sectionIndex]?.videoSection?.[videoIndex]
+                ?.video_title && (
+                <div className="text-rose-500 text-sm">
+                  {
+                    errors.section?.[sectionIndex]?.videoSection?.[videoIndex]
+                      ?.video_title.message
+                  }
+                </div>
+              )}
+            </div>
+
+            {videoIndex > 0 && (
+              <Button
+                type="button"
+                onClick={() => remove(videoIndex)}
+                variant="ghost"
+                className="text-gray-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors p-1.5 rounded-full"
+              >
+                <X size={18} />
+              </Button>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <VideoUploadButton
+              btnName={"Video Upload"}
+              onAssetUpload={(result) =>
+                onActualVideoUpload(result, sectionIndex, videoIndex)
+              }
+            />
+
+            {videos.map(
+              (videoDetailsObject) =>
+                videoDetailsObject.sectionIndex === sectionIndex &&
+                videoDetailsObject.videoIndex === videoIndex && (
+                  <div
+                    key={videoDetailsObject.public_id}
+                    className="flex items-center gap-3 bg-gray-800/80 py-1.5 px-3 rounded-lg"
+                  >
+                    <div className="text-green-400 text-sm font-medium">
+                      Video uploaded successfully
+                    </div>
+                    <div className="text-gray-400 text-xs truncate max-w-xs hidden md:block">
+                      {videoDetailsObject.fileName}
+                    </div>
+                  </div>
+                )
+            )}
+          </div>
+        </div>
+      ))}
+
+      <Button
+        type="button"
+        onClick={() =>
+          append({
+            video_title: "",
+            video_public_id: "",
+            video_thumbnailUrl: "",
+            video_url: "",
+            video_duration: 0,
+          })
+        }
+        className="mt-2 font-medium text-gray-300 bg-gray-800/70 hover:bg-gray-700/80 transition-colors flex items-center gap-2 py-1.5 px-3 rounded-lg shadow-md"
+      >
+        <Plus size={16} />
+        <span>Add Video</span>
+      </Button>
     </div>
   );
 };

@@ -60,9 +60,10 @@ export default function TranscriptionSidebar({
         );
       }
 
+      console.log("HTML String", finalData?.data);
+
       // Cleaning incoming string having extra "'''html" & "'''"
-      const regex = /^```html\s*|\s*```$/;
-      const cleanedHTMLString = finalData?.data.replace(regex, "");
+      const cleanedHTMLString = finalData?.data.replace(/```html|```/g, "");
 
       await fetch(`${API_END_POINT}api/video/transcript/saveSummary`, {
         method: "POST",

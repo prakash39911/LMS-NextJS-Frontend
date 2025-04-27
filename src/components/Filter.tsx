@@ -67,10 +67,12 @@ const Filter = () => {
       ...prevState,
       selectedRating,
     }));
+    setIsPresetSaved(false);
   };
 
   const setPriceFilter = (priceRange: number[]) => {
     setFilterState((prevState) => ({ ...prevState, priceRange }));
+    setIsPresetSaved(false);
   };
 
   const handleSelectPreset = (id: string) => {
@@ -121,6 +123,12 @@ const Filter = () => {
     const finalResult = await result.json();
 
     if (finalResult.status) {
+      setCurrentPresetName(finalResult?.data?.name);
+      setCurrentSelectedPreset((prevState) => ({
+        ...prevState,
+        selectedRating: finalResult?.data?.selectedRating,
+        priceRange: finalResult?.data?.priceRange,
+      }));
       setIsPresetSaved(true);
       refetch();
       toast(`${finalResult.message}`);
@@ -153,7 +161,6 @@ const Filter = () => {
     filterState.selectedRating,
     router,
     filterState.priceRange,
-    searchQuery,
     debouncedQuery,
   ]);
 

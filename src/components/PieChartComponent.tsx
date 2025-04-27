@@ -64,29 +64,37 @@ export default function PieChartComponent({
 
   return (
     <Card className="flex flex-col bg-gray-800 border border-gray-800 text-gray-300">
-      <CardHeader className="items-center pb-0">
-        <CardTitle>Courses & Income</CardTitle>
-        <CardDescription className="text-gray-400">Overall</CardDescription>
-      </CardHeader>
-      <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[340px] pb-0 [&_.recharts-pie-label-text]:fill-white"
-        >
-          <PieChart>
-            <ChartTooltip content={<CustomTooltipContent />} />
-            <Pie
-              data={pieDataWithColors}
-              dataKey="totalIncome"
-              nameKey="course_name"
-              outerRadius={110}
-              innerRadius={50}
-              paddingAngle={4}
-              label
-            />
-          </PieChart>
-        </ChartContainer>
-      </CardContent>
+      {pieChartData?.[0].totalIncome !== 0 ? (
+        <div>
+          <CardHeader className="items-center pb-0">
+            <CardTitle>Courses & Income</CardTitle>
+            <CardDescription className="text-gray-400">Overall</CardDescription>
+          </CardHeader>
+          <CardContent className="flex-1 pb-0">
+            <ChartContainer
+              config={chartConfig}
+              className="mx-auto aspect-square max-h-[340px] pb-0 [&_.recharts-pie-label-text]:fill-white"
+            >
+              <PieChart>
+                <ChartTooltip content={<CustomTooltipContent />} />
+                <Pie
+                  data={pieDataWithColors}
+                  dataKey="totalIncome"
+                  nameKey="course_name"
+                  outerRadius={110}
+                  innerRadius={50}
+                  paddingAngle={4}
+                  label
+                />
+              </PieChart>
+            </ChartContainer>
+          </CardContent>
+        </div>
+      ) : (
+        <div className="min-h-[340px] flex justify-center items-center">
+          Oops...No Data Present...
+        </div>
+      )}
     </Card>
   );
 }

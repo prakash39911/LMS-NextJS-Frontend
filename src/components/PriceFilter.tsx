@@ -12,8 +12,16 @@ export default function PriceFilter({ onChange, selectedPrices }: Props) {
     selectedPrices?.length > 0 ? selectedPrices : [0, 1000]
   );
 
+  // Separate the local state update from the parent notification
   const handleChange = (event: Event, newValue: number | number[]) => {
     setValue(newValue as number[]);
+  };
+
+  // Only notify parent component when slider interaction ends
+  const handleChangeCommitted = (
+    event: Event | React.SyntheticEvent,
+    newValue: number | number[]
+  ) => {
     onChange(newValue as number[]);
   };
 
@@ -31,6 +39,7 @@ export default function PriceFilter({ onChange, selectedPrices }: Props) {
           getAriaLabel={() => "Temperature range"}
           value={value}
           onChange={handleChange}
+          onChangeCommitted={handleChangeCommitted}
           min={0}
           max={1000}
           aria-label="Always visible"
