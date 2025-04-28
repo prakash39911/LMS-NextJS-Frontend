@@ -1,6 +1,6 @@
 import React from "react";
 import StatCard from "./StatCard";
-import { BookOpen, Users, DollarSign } from "lucide-react";
+import { BookOpen, Users, IndianRupee } from "lucide-react";
 import DashChart from "./DashChart";
 import {
   calTotalIncomeDashboard,
@@ -44,7 +44,7 @@ export default function DashboardComponent({
             color="text-green-500"
           />
           <StatCard
-            icon={DollarSign}
+            icon={IndianRupee}
             title="Total Income"
             value={`Rs.${calTotalIncomeDashboard(allDetails)}`}
             color="text-yellow-500"

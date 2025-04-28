@@ -134,7 +134,7 @@ export default function VideoPlayerComponent({
           />
         </div>
       </div>
-      <div>
+      <div className="z-50">
         <TranscriptionSidebar
           transcriptionData={summaryData}
           videoPublicId={currentVideo?.video_public_id}
