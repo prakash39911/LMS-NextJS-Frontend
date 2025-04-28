@@ -1,4 +1,5 @@
 import { FilterStateType } from "@/components/Filter";
+import { string } from "zod";
 
 export function makeid() {
   let result = "";
@@ -123,10 +124,18 @@ export function areObjectsEqual(obj1: FilterStateType, obj2: FilterStateType) {
 }
 
 export function calTotalStudentsDashboard(allDetails: DashBoardDataType[]) {
-  return allDetails.reduce(
-    (accu, curr) => (accu = accu + curr.enrolledStudents.length),
-    0
-  );
+  const studentsArray: string[] = [];
+
+  allDetails.map((eachCourse) => {
+    eachCourse.enrolledStudents.map((eachEnrolledStudentsObj) =>
+      studentsArray.push(eachEnrolledStudentsObj.studentId)
+    );
+  });
+  // to find unique values from array, we can convert it into set which consist of unique values.
+  const uniqueStudentsArray = [...new Set(studentsArray)];
+  console.log("How many unique students are enrolled", uniqueStudentsArray);
+
+  return uniqueStudentsArray.length;
 }
 
 export function calTotalIncomeDashboard(allDetails: DashBoardDataType[]) {

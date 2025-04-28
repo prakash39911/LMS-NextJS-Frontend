@@ -83,6 +83,7 @@ type DashBoardDataType = {
   id: string;
   title: string;
   enrolledStudents: {
+    studentId: string;
     amount: number;
     created_at: string;
     courseId: string;
