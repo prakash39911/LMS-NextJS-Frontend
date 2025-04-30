@@ -4,7 +4,7 @@ import { CldImage } from "next-cloudinary";
 import React from "react";
 
 export default function NavLogo() {
-  const logo = process.env.LOGO_PUBLIC_ID || "Logo";
+  const logo = process.env.LOGO_PUBLIC_ID || "Logo123";
 
   return (
     <div className="flex gap-1 items-center">
