@@ -6,6 +6,7 @@ import Provider from "@/app/Provider";
 import { dark } from "@clerk/themes";
 import Chat from "@/components/chat/Chat";
 import { Message } from "@/components/chat/ChatMessage";
+import { auth } from "@clerk/nextjs/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,19 +23,11 @@ export const metadata: Metadata = {
   description: "Popular Online Courses At Affordable Prices",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialMessages: Message[] = [
-    {
-      id: "1",
-      text: "Hello! How can I help you today?",
-      sender: "system",
-      timestamp: new Date(Date.now() - 60000 * 5),
-    },
-  ];
   return (
     <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="en">
@@ -42,7 +35,6 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900`}
         >
           <Provider>{children}</Provider>
-          <Chat initialMessages={initialMessages} />
         </body>
       </html>
     </ClerkProvider>

@@ -18,7 +18,8 @@ const ChatMessage = ({ message, isLoading }: ChatMessageProps) => {
     hour: "numeric",
     minute: "numeric",
     hour12: true,
-  }).format(message.timestamp);
+    timeZone: "Asia/Kolkata", // Convert to IST
+  }).format(new Date(message.timestamp));
 
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>

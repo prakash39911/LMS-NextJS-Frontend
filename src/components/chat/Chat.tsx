@@ -6,12 +6,14 @@ import ChatIcon from "./ChatIcon";
 import ChatWindow from "./ChatWindow";
 import { Message } from "./ChatMessage";
 import { v4 as uuidv4 } from "uuid";
+import { useAuth } from "@clerk/nextjs";
 
 interface ChatProps {
   initialMessages?: Message[];
 }
 
 const Chat = ({ initialMessages = [] }: ChatProps) => {
+  const { getToken } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +36,8 @@ const Chat = ({ initialMessages = [] }: ChatProps) => {
 
     setMessages([...messages, newMessage]);
 
+    const token = await getToken();
+
     const API_END_POINT = process.env.NEXT_PUBLIC_API_BASE_URL;
 
     try {
@@ -43,6 +47,7 @@ const Chat = ({ initialMessages = [] }: ChatProps) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ query: text }),
       });
