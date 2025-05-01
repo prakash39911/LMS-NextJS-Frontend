@@ -20,7 +20,11 @@ const ChatWindow = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const timeout = setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100); // Delay ensures DOM is updated
+
+    return () => clearTimeout(timeout);
   }, [messages]);
 
   return (
