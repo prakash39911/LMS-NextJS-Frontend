@@ -33,7 +33,7 @@ export default function FloatingFilter() {
 
       {/* Filter Menu */}
       <div
-        className={`fixed right-0 h-full top-16 w-96 bg-transparent/10 backdrop-blur-md shadow-lg transform transition-transform duration-300 ease-in-out ${
+        className={`fixed right-0 h-full top-16 w-80 bg-transparent/10 backdrop-blur-md shadow-lg transform transition-transform duration-300 ease-in-out ${
           isFilterVisible ? "translate-x-0" : "translate-x-full"
         } z-40`}
       >
@@ -47,7 +47,7 @@ export default function FloatingFilter() {
           >
             <X size={35} />
           </span>
-          <div className="relative top-14">
+          <div className="relative top-14 overflow-filter-height overflow-y-auto">
             <Filter />
           </div>
         </div>

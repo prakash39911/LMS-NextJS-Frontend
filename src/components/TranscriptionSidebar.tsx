@@ -163,9 +163,9 @@ export default function TranscriptionSidebar({
             isOpen ? "translate-x-0" : "translate-x-full"
           } z-60`}
         >
-          <div className="text-white flex flex-col gap-5">
+          <div className="text-white relative flex flex-col gap-5 overflow-generate-summary-height overflow-y-auto">
             <span
-              className="cursor-pointer w-8 fixed right-2 top-2"
+              className="cursor-pointer w-8 absolute right-3 top-2"
               onClick={() => {
                 setIsButtonVisible(true);
                 setIsOpen(false);
@@ -173,7 +173,7 @@ export default function TranscriptionSidebar({
             >
               <X size={35} />
             </span>
-            <div className="relative top-14 p-1.5 flex flex-col gap-5">
+            <div className="relative top-12 p-1.5 flex flex-col gap-5">
               {summary && (
                 <div className="flex justify-between items-center">
                   <div className="flex justify-center font-bold text-2xl text-blue-500">

@@ -25,12 +25,12 @@ export default function RatingFilter({ onChange, selectedRating }: Props) {
   return (
     <>
       <div className="flex justify-between items-center px-2">
-        <div className="text-xl text-gray-100 flex items-center justify-center relative top-[-8px] font-semibold">
+        <div className="text-xl text-gray-100 flex items-center justify-center relative mb-1 font-semibold">
           Filter by Ratings
         </div>
       </div>
 
-      <div className="space-y-2 flex flex-col">
+      <div className="space-y-1 flex flex-col">
         {ratings.map((rating, index) => {
           const isSelected = selectedRating.includes(rating);
           return (

@@ -190,7 +190,7 @@ const Filter = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-2 overflow-y-auto">
+    <div className="flex flex-col items-center gap-1.5">
       <div>
         <Button
           variant="ghost"
@@ -206,7 +206,7 @@ const Filter = () => {
           setSearchQuery={setSearchQuery}
         />
       </div>
-      <div className="flex flex-col gap-2 border border-gray-700 p-8">
+      <div className="flex flex-col gap-1 border border-gray-700 px-8 py-2.5">
         <span className="text-xl font-bold">Select Saved Filter</span>
         <FilterPresetSelector
           fetchedData={fetchedPresetData}
@@ -214,13 +214,13 @@ const Filter = () => {
           value={currentSelectedPresetId}
         />
       </div>
-      <div id="rating-list" className="border border-gray-700 p-8">
+      <div id="rating-list" className="border border-gray-700 px-8 py-3">
         <RatingFilter
           selectedRating={filterState.selectedRating}
           onChange={setSelectedRating}
         />
       </div>
-      <div id="price-list" className="border border-gray-700 p-8">
+      <div id="price-list" className="border border-gray-700 px-8 py-2.5">
         <PriceFilter
           onChange={setPriceFilter}
           selectedPrices={filterState.priceRange}
@@ -232,7 +232,7 @@ const Filter = () => {
           <div>
             <div
               id="save-button"
-              className="flex flex-col gap-4 border border-gray-700 p-4 w-64"
+              className="flex flex-col gap-4 border border-gray-700 p-4 w-64 mb-3"
             >
               <div className="flex gap-5 items-center">
                 <input

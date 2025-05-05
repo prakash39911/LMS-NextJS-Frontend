@@ -12,6 +12,18 @@ body {
   }
 }
 
+@layer components {
+  .overflow-filter-height {
+    height: calc(100vh - 130px);
+  }
+}
+
+@layer components {
+  .overflow-generate-summary-height {
+    height: calc(100vh - 70px);
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
