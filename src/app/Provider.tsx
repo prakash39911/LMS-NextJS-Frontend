@@ -3,8 +3,6 @@ import Navbar from "../components/navbar/Navbar";
 import SideBarLayoutComponent from "../components/SideBarLayoutComponent";
 import { Toaster } from "@/components/ui/sonner";
 import { auth, currentUser } from "@clerk/nextjs/server";
-import Chat from "@/components/chat/Chat";
-import { Message } from "@/components/chat/ChatMessage";
 import ChatLayoutCompo from "@/components/ChatLayoutCompo";
 
 export default async function Provider({

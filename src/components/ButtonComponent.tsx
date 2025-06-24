@@ -15,7 +15,7 @@ export default function ButtonComponent({
   return (
     <div>
       <Button
-        className="border border-gray-400 bg-gray-600 hover:bg-gray-900"
+        className="border border-gray-500 bg-transparent hover:bg-blue-900"
         onClick={() => router.push(`${link}`)}
       >
         {btnName}
