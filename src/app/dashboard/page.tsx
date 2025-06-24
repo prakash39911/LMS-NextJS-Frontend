@@ -1,7 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import React from "react";
-
 import DashboardComponent from "@/components/DashboardComponent";
 
 export default async function page() {
@@ -32,6 +31,8 @@ export default async function page() {
   }
 
   const finalData = await fetchData.json();
+
+  console.log("Data fetched in Dashboard---", finalData);
 
   return <DashboardComponent allDetails={finalData?.data} />;
 }

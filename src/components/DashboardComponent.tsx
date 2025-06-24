@@ -34,7 +34,7 @@ export default function DashboardComponent({
           <StatCard
             icon={BookOpen}
             title="Total Courses"
-            value={allDetails.length}
+            value={allDetails.length > 0 ? allDetails.length : 0}
             color="text-blue-500"
           />
           <StatCard

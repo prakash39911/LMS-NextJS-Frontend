@@ -64,7 +64,7 @@ export default function PieChartComponent({
 
   return (
     <Card className="flex flex-col bg-gray-800 border border-gray-800 text-gray-300">
-      {pieChartData?.[0].totalIncome !== 0 ? (
+      {pieChartData.length > 0 && pieChartData?.[0].totalIncome !== 0 ? (
         <div>
           <CardHeader className="items-center pb-0">
             <CardTitle>Courses & Income</CardTitle>
