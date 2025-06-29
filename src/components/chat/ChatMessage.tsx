@@ -3,7 +3,7 @@ import React from "react";
 export interface Message {
   id: string;
   text: string;
-  sender: "user" | "system";
+  sender: "user" | "model";
   timestamp: Date;
 }
 

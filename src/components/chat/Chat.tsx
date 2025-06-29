@@ -57,7 +57,7 @@ const Chat = ({ initialMessages = [] }: ChatProps) => {
       const systemResponse: Message = {
         id: uuidv4(),
         text: finalData?.data,
-        sender: "system",
+        sender: "model",
         timestamp: new Date(),
       };
 
