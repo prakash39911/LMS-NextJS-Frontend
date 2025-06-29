@@ -1,9 +1,12 @@
 import HomePage from "@/components/HomePage";
+import { auth } from "@clerk/nextjs/server";
 
-export default function Home() {
+export default async function Home() {
+  const { userId } = await auth();
+
   return (
     <div className="flex items-center justify-center">
-      <HomePage />
+      <HomePage userId={userId} />
     </div>
   );
 }
