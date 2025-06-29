@@ -30,7 +30,7 @@ export const SearchField = ({ searchQuery, setSearchQuery }: Props) => {
           type="text"
           value={searchQuery}
           onChange={(e) => handleOnChange(e)}
-          placeholder="Search with Elastic Search..."
+          placeholder="Search..."
           className="w-full pl-12 pr-4 py-3 bg-gray-900/50 backdrop-blur-xl text-white placeholder-gray-400 
                    rounded-2xl border border-gray-700/50 focus:border-indigo-500 focus:ring-2 
                    focus:ring-indigo-500/20 outline-none transition-all duration-200
