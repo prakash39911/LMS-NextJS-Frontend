@@ -16,7 +16,7 @@ export default function SideBarLayoutComponent({
   if (pathname.startsWith("/learn")) return null;
 
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider>
       <AppSidebar userId={userId} currentUserData={currentUserData} />
       <div className="fixed top-0 left-0 z-50 mt-3 ml-1 md:ml-0 text-white">
         <SidebarTrigger />
